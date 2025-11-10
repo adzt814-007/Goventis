@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Button, Container, Row, Col, Card } from 'react-bootstrap';
 import { Plane, MapPin, Shield, FileCheck, Phone, Star, Car } from 'lucide-react';
@@ -16,8 +16,114 @@ type WelcomePageProps = {
 };
 
 export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedCountry = 'Bali', onCountryChange }: WelcomePageProps) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    // Trigger animations after component mounts
+    setIsLoaded(true);
+  }, []);
+
   return (
     <div className="min-vh-100">
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        
+        @keyframes slideInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        @keyframes slideInRight {
+          from {
+            opacity: 0;
+            transform: translateX(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        
+        .animate-fade-in-up {
+          animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        .animate-fade-in {
+          animation: fadeIn 1s ease-out forwards;
+        }
+        
+        .animate-slide-in-left {
+          animation: slideInLeft 0.8s ease-out forwards;
+        }
+        
+        .animate-slide-in-right {
+          animation: slideInRight 0.8s ease-out forwards;
+        }
+        
+        .animate-scale-in {
+          animation: scaleIn 0.6s ease-out forwards;
+        }
+        
+        .animate-delay-1 {
+          animation-delay: 0.2s;
+          opacity: 0;
+        }
+        
+        .animate-delay-2 {
+          animation-delay: 0.4s;
+          opacity: 0;
+        }
+        
+        .animate-delay-3 {
+          animation-delay: 0.6s;
+          opacity: 0;
+        }
+        
+        .animate-delay-4 {
+          animation-delay: 0.8s;
+          opacity: 0;
+        }
+        
+        .animate-delay-5 {
+          animation-delay: 1s;
+          opacity: 0;
+        }
+      `}</style>
       {/* Header */}
       <NavBar onNavigate={onNavigate} user={user} onLogout={onLogout} showLogin={true} currentPage={currentPage} selectedCountry={selectedCountry} onCountryChange={onCountryChange} />
 
@@ -38,7 +144,7 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
         }} />
 
         <div className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center px-4 text-center text-white" style={{ height: '92vh' }}>
-          <div className="mb-4">
+          <div className={`mb-4 ${isLoaded ? 'animate-fade-in-up animate-delay-1' : ''}`}>
             <div className="d-inline-block px-4 py-2 rounded-pill mb-3" style={{
               backgroundColor: 'rgba(255, 255, 255, 0.2)',
               backdropFilter: 'blur(8px)'
@@ -47,17 +153,19 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
             </div>
           </div>
 
-          <h1 className="mb-4 d-flex align-items-center justify-content-center gap-3" style={{ fontSize: "clamp(20px, 5vw, 55px)", maxWidth: '56rem', fontWeight: 'bold' }}>
+          <h1 className={`mb-4 d-flex align-items-center justify-content-center gap-3 ${isLoaded ? 'animate-fade-in-up animate-delay-2' : ''}`} style={{ fontSize: "clamp(20px, 5vw, 55px)", maxWidth: '56rem', fontWeight: 'bold' }}>
             <img 
               src={getCountryFlagUrl(selectedCountry, 'w40')}
               alt={`${selectedCountry} flag`}
+              className={isLoaded ? 'animate-scale-in animate-delay-2' : ''}
               style={{ 
                 width: 'clamp(40px, 5vw, 80px)', 
                 height: 'clamp(30px, 3.75vw, 60px)', 
                 objectFit: 'cover',
                 borderRadius: '8px',
                 border: '2px solid rgba(255, 255, 255, 0.5)',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                opacity: isLoaded ? 1 : 0
               }}
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
@@ -66,12 +174,12 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
             WELCOME TO {selectedCountry.toUpperCase()}
           </h1>
 
-          <p className="mb-5" style={{ maxWidth: '42rem', color: 'rgba(255, 255, 255, 0.9)' }}>
+          <p className={`mb-5 ${isLoaded ? 'animate-fade-in-up animate-delay-3' : ''}`} style={{ maxWidth: '42rem', color: 'rgba(255, 255, 255, 0.9)' }}>
             Complete your pre-arrival documentation quickly and securely. Start your journey to paradise with a smooth entry process.
           </p>
 
-          <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center align-items-center">
-            <Button
+          <div className={`d-flex flex-column flex-sm-row gap-3 justify-content-center align-items-center ${isLoaded ? 'animate-fade-in-up animate-delay-4' : ''}`}>
+            {/* <Button
               onClick={() => onNavigate('login')}
               size="lg"
               className="px-5 py-3 fw-bold text-uppercase"
@@ -99,8 +207,8 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
             >
               <Plane style={{ width: '20px', height: '20px', marginRight: '10px', display: 'inline-block' }} />
               Get Started
-            </Button>
-            {/* <Button
+            </Button> */}
+            <Button
               onClick={() => onNavigate('login')}
               size="lg"
               variant="outline-light"
@@ -126,15 +234,17 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
                 e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.8)';
               }}
             >
-              Sign In
-            </Button> */}
+              {/* Sign In */}
+              <Plane style={{ width: '20px', height: '20px', marginRight: '10px', display: 'inline-block' }} />
+              Get Started
+            </Button>
           </div>
         </div>
       </div>
 
       {/* Features Section */}
       <Container className="py-5">
-        <div className="text-center mb-5">
+        <div className={`text-center mb-5 ${isLoaded ? 'animate-fade-in-up animate-delay-1' : ''}`}>
           <h2 className="mb-3">Complete Pre-Arrival Process</h2>
           <p className="text-muted mx-auto" style={{ maxWidth: '42rem' }}>
             Streamlined documentation for a hassle-free arrival in {selectedCountry}. Complete all requirements in 10-15 minutes per traveler.
@@ -142,7 +252,7 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
         </div>
 
         <Row className="g-4">
-          <Col md={6} lg={3} className="text-center">
+          <Col md={6} lg={3} className={`text-center ${isLoaded ? 'animate-fade-in-up animate-delay-2' : ''}`}>
             <div className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3 bg-primary bg-opacity-10 text-primary" style={{ width: '64px', height: '64px' }}>
               <FileCheck style={{ width: '32px', height: '32px', color: "white" }} />
             </div>
@@ -150,7 +260,7 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
             <p className="text-muted">Upload passport, flight, and accommodation confirmations securely</p>
           </Col>
 
-          <Col md={6} lg={3} className="text-center">
+          <Col md={6} lg={3} className={`text-center ${isLoaded ? 'animate-fade-in-up animate-delay-3' : ''}`}>
             <div className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3 bg-success bg-opacity-10 text-success" style={{ width: '64px', height: '64px' }}>
               <Shield style={{ width: '32px', height: '32px' }} />
             </div>
@@ -158,7 +268,7 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
             <p className="text-muted">Complete visa, customs, health pass, and insurance in one place</p>
           </Col>
 
-          <Col md={6} lg={3} className="text-center">
+          <Col md={6} lg={3} className={`text-center ${isLoaded ? 'animate-fade-in-up animate-delay-4' : ''}`}>
             <div className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3 bg-warning bg-opacity-10 text-warning" style={{ width: '64px', height: '64px' }}>
               <Plane style={{ width: '32px', height: '32px' }} />
             </div>
@@ -166,7 +276,7 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
             <p className="text-muted">Add up to 5 travelers with simplified forms for minors</p>
           </Col>
 
-          <Col md={6} lg={3} className="text-center">
+          <Col md={6} lg={3} className={`text-center ${isLoaded ? 'animate-fade-in-up animate-delay-5' : ''}`}>
             <div className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3 bg-info bg-opacity-10 text-info" style={{ width: '64px', height: '64px' }}>
               <MapPin style={{ width: '32px', height: '32px' }} />
             </div>
@@ -180,7 +290,7 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
       <div className="bg-white py-5">
         <Container>
           <Row className="g-3 align-items-center">
-            <Col md={6}>
+            <Col md={6} className={isLoaded ? 'animate-slide-in-left animate-delay-1' : ''}>
               <h2 className="mb-4">Your Journey Starts Here</h2>
               <p className="text-muted mb-4">
                 The official {selectedCountry} tourism portal makes your pre-arrival process simple and efficient. Complete all necessary documentation before you travel.
@@ -204,7 +314,7 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
                 </li>
               </ul>
             </Col>
-            <Col md={6}>
+            <Col md={6} className={isLoaded ? 'animate-slide-in-right animate-delay-2' : ''}>
               <div className="position-relative  overflow-hidden shadow-lg" style={{ height: '400px', borderRadius: '25px' }}>
                 <ImageWithFallback
                   src={new URL('../Images/23368.jpg', import.meta.url).href}
@@ -221,7 +331,7 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
       {/* Local Taxi Services Section */}
       <div className="bg-light py-5">
         <Container>
-          <div className="text-center mb-5">
+          <div className={`text-center mb-5 ${isLoaded ? 'animate-fade-in-up animate-delay-1' : ''}`}>
             <h2 className="mb-3 fw-bold">Local Taxi Services</h2>
             <p className="text-muted mx-auto" style={{ maxWidth: '42rem' }}>
               Reliable and convenient taxi services for your transportation needs in <span style={{ color: 'var(--primary)' , fontWeight: '600'}}>{selectedCountry}</span>
@@ -229,8 +339,10 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
           </div>
 
           <Row className="g-4">
-            {(TAXI_SERVICES[selectedCountry] || TAXI_SERVICES['Bali']).map((taxi, index) => (
-              <Col md={4} key={index}>
+            {(TAXI_SERVICES[selectedCountry] || TAXI_SERVICES['Bali']).map((taxi, index) => {
+              const delayClass = `animate-delay-${Math.min(index + 2, 5)}`;
+              return (
+              <Col md={4} key={index} className={isLoaded ? `animate-fade-in-up ${delayClass}` : ''}>
                 <Card className="border-0 shadow-sm h-100" style={{ borderRadius: '16px', overflow: 'hidden', transition: 'transform 0.3s ease' }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-8px)';
@@ -294,7 +406,8 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
                   </Card.Body>
                 </Card>
               </Col>
-            ))}
+              );
+            })}
           </Row>
         </Container>
       </div>
