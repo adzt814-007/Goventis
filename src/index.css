@@ -1,0 +1,628 @@
+/* Custom styles for Bali Travel App - Travel Agency Theme */
+:root {
+  --font-size: 16px;
+  --background: #ffffff;
+  --foreground: #0f172a;
+  
+  /* Primary - Tropical Teal (Ocean/Tropical Waters) */
+  --primary: #0d9488;
+  --primary-foreground: #ffffff;
+  --primary-hover: #0f766e;
+  --primary-light: #14b8a6;
+  
+  /* Secondary - Warm Coral (Sunset/Tropical Warmth) */
+  --secondary: #f3f3f5;
+  --secondary-foreground: #0f172a;
+  --accent: #f97316;
+  --accent-foreground: #ffffff;
+  --accent-hover: #ea580c;
+  
+  /* Muted colors */
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  
+  /* Destructive */
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  
+  /* Borders and inputs */
+  --border: rgba(15, 23, 42, 0.1);
+  --input: transparent;
+  --input-background: #f8fafc;
+  
+  /* Travel theme colors */
+  --ocean-blue: #0891b2;
+  --tropical-green: #10b981;
+  --sunset-orange: #f97316;
+  --coral-pink: #fb7185;
+}
+
+html {
+  font-size: var(--font-size);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Login Page Sliding Panel Animation */
+@keyframes show {
+  0%, 49.99% {
+    opacity: 0;
+    z-index: 1;
+  }
+  50%, 100% {
+    opacity: 1;
+    z-index: 5;
+  }
+}
+
+.animate-show {
+  animation: show 0.6s;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Custom Bootstrap overrides - Travel Agency Theme */
+.btn-primary,
+.btn-primarys {
+    background-color: var(--primary);
+  border-color: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 1rem;
+  }
+
+.btn-primary:hover,
+.btn-primarys:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+    color: var(--primary-foreground);
+  }
+
+.btn-outline-primary,
+.btn-outline-primarys {
+  color: var(--primary);
+    border-color: var(--primary);
+  }
+
+.btn-outline-primary:hover,
+.btn-outline-primarys:hover {
+    background-color: var(--primary);
+  border-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+/* Disabled button styles */
+.btn:disabled,
+.btn.disabled {
+  background-color: #e9ecef !important;
+  border-color: #e9ecef !important;
+  color: #6c757d !important;
+  opacity: 0.65 !important;
+  cursor: not-allowed !important;
+}
+
+.btn-primary:disabled,
+.btn-primary.disabled,
+.btn-primarys:disabled,
+.btn-primarys.disabled {
+  background-color: rgba(13, 148, 136, 0.3) !important;
+  border-color: rgba(13, 148, 136, 0.3) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Bootstrap primary color override */
+.bg-primary {
+  background-color: var(--primary) !important;
+}
+
+.text-primary {
+  color: var(--primary) !important;
+}
+
+.border-primary {
+  border-color: var(--primary) !important;
+}
+
+/* Bootstrap utility classes for gaps */
+.gap-2 {
+  gap: 0.5rem !important;
+}
+
+.gap-3 {
+  gap: 1rem !important;
+}
+
+.gap-4 {
+  gap: 1.5rem !important;
+}
+
+/* Override Bootstrap select default blue colors - Comprehensive Theme Override */
+.form-select,
+select,
+.theme-select {
+  border-color: var(--border) !important;
+  background-color: var(--input-background) !important;
+  color: var(--foreground) !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%230d9488' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.75rem center !important;
+  background-size: 16px 12px !important;
+  box-shadow: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+}
+
+/* Specific override for theme-select to prevent any blue colors - Use #0d9488 */
+.theme-select {
+  border: 1px solid rgba(15, 23, 42, 0.1) !important;
+  outline: none !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+.theme-select:focus,
+.theme-select:focus-visible,
+.theme-select:focus:not(:disabled):not([readonly]) {
+  border-color: #0d9488 !important;
+  border: 1px solid #0d9488 !important;
+  box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.25) !important;
+  outline: none !important;
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+.theme-select:hover,
+.theme-select:hover:not(:disabled):not([readonly]) {
+  border-color: #0d9488 !important;
+  border: 1px solid #0d9488 !important;
+  background-color: #f1f5f9 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.theme-select:active,
+.theme-select:active:not(:disabled):not([readonly]) {
+  border-color: #0d9488 !important;
+  border: 1px solid #0d9488 !important;
+  background-color: #f8fafc !important;
+  outline: none !important;
+}
+
+/* Aggressive override for hover - remove all blue colors */
+.form-select:hover,
+select:hover,
+.theme-select:hover,
+.form-select:hover:not(:disabled):not([readonly]),
+select:hover:not(:disabled):not([readonly]),
+.theme-select:hover:not(:disabled):not([readonly]) {
+  border-color: var(--primary) !important;
+  background-color: var(--muted) !important;
+  color: var(--foreground) !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%230d9488' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Override Bootstrap's default blue border on hover - Use #0d9488 */
+.form-select:hover,
+select:hover,
+.theme-select:hover {
+  border-color: #0d9488 !important;
+  border: 1px solid #0d9488 !important;
+  box-shadow: 0 0 0 0 rgba(13, 148, 136, 0) !important;
+  outline: none !important;
+}
+
+.form-select:focus,
+select:focus,
+.theme-select:focus,
+.form-select:focus:not(:disabled):not([readonly]),
+select:focus:not(:disabled):not([readonly]),
+.theme-select:focus:not(:disabled):not([readonly]) {
+  border-color: #0d9488 !important;
+  border: 1px solid #0d9488 !important;
+  background-color: var(--input-background) !important;
+  color: var(--foreground) !important;
+  box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.25) !important;
+  outline: 0 !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%230d9488' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+}
+
+.form-select:active,
+select:active,
+.theme-select:active {
+  border-color: #0d9488 !important;
+  border: 1px solid #0d9488 !important;
+  background-color: var(--input-background) !important;
+  color: var(--foreground) !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%230d9488' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+  outline: none !important;
+}
+
+/* Override Bootstrap's default blue focus ring - Use #0d9488 */
+.form-select:focus-visible,
+select:focus-visible,
+.theme-select:focus-visible {
+  border-color: #0d9488 !important;
+  border: 1px solid #0d9488 !important;
+  box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.25) !important;
+  outline: 0 !important;
+}
+
+/* Dropdown options styling - Remove all blue colors */
+.form-select option,
+select option,
+.theme-select option {
+  background-color: #ffffff !important;
+  color: var(--foreground) !important;
+  padding: 0.5rem !important;
+}
+
+/* Override hover state - use theme color instead of blue */
+.form-select option:hover,
+.form-select option:focus,
+select option:hover,
+select option:focus,
+.theme-select option:hover,
+.theme-select option:focus {
+  background-color: var(--muted) !important;
+  color: var(--foreground) !important;
+  background: var(--muted) !important;
+}
+
+/* Override checked/selected state - use theme color instead of blue */
+.form-select option:checked,
+select option:checked,
+.theme-select option:checked {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  background: var(--primary) !important;
+}
+
+.form-select option:selected,
+select option:selected,
+.theme-select option:selected {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  background: var(--primary) !important;
+}
+
+/* Force remove Bootstrap's blue from all option states */
+.form-select option,
+select option,
+.theme-select option {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+}
+
+.form-select option:hover,
+select option:hover,
+.theme-select option:hover {
+  background: var(--muted) !important;
+  background-color: var(--muted) !important;
+  color: var(--foreground) !important;
+}
+
+.form-select option:checked,
+select option:checked,
+.theme-select option:checked,
+.form-select option:selected,
+select option:selected,
+.theme-select option:selected {
+  background: var(--primary) !important;
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+}
+
+/* Additional aggressive overrides for dropdown options */
+select option,
+.form-select option,
+.theme-select option {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: var(--foreground) !important;
+}
+
+select option:hover,
+.form-select option:hover,
+.theme-select option:hover {
+  background-color: var(--muted) !important;
+  background: var(--muted) !important;
+  color: var(--foreground) !important;
+}
+
+select option:checked,
+.form-select option:checked,
+.theme-select option:checked,
+select option:selected,
+.form-select option:selected,
+.theme-select option:selected {
+  background-color: var(--primary) !important;
+  background: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+}
+
+/* Override Bootstrap's blue color variables for options */
+select option,
+.form-select option,
+.theme-select option {
+  --bs-primary: var(--primary) !important;
+  --bs-primary-rgb: 13, 148, 136 !important;
+}
+
+/* Remove any blue color from Bootstrap's default styles */
+.form-select:not(:disabled):not([readonly]):focus,
+select:not(:disabled):not([readonly]):focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.25) !important;
+  outline: 0 !important;
+}
+
+/* Ensure dropdown arrow is always theme color */
+.form-select:not([multiple]):not([size]),
+select:not([multiple]):not([size]) {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%230d9488' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.75rem center !important;
+  background-size: 16px 12px !important;
+  padding-right: 2.5rem !important;
+}
+
+/* Force remove Bootstrap's default blue colors - highest specificity */
+.form-select:hover,
+select:hover,
+.form-select:focus,
+select:focus,
+.form-select:active,
+select:active {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.25) !important;
+}
+
+.form-select:hover {
+  box-shadow: none !important;
+}
+
+/* Override any Bootstrap blue color variables */
+.form-select,
+select {
+  --bs-border-color: var(--primary) !important;
+  --bs-focus-ring-color: rgba(13, 148, 136, 0.25) !important;
+  --bs-primary: var(--primary) !important;
+  --bs-primary-rgb: 13, 148, 136 !important;
+}
+
+/* Direct override for Bootstrap's default blue (#0d6efd) */
+.form-select:hover,
+select:hover,
+.form-select:focus,
+select:focus {
+  border-color: var(--primary) !important;
+  border-color: #0d9488 !important;
+  box-shadow: 0 0 0 0 rgba(13, 148, 136, 0) !important;
+}
+
+.form-select:focus,
+select:focus {
+  box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.25) !important;
+}
+
+/* Remove any blue color from all states - Use #0d9488 */
+.form-select:hover,
+select:hover,
+.theme-select:hover {
+  border-color: #0d9488 !important;
+  border: 1px solid #0d9488 !important;
+  background-color: var(--muted) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Force remove all blue colors - highest priority */
+select.theme-select,
+.theme-select {
+  border-color: rgba(15, 23, 42, 0.1) !important;
+  border: 1px solid rgba(15, 23, 42, 0.1) !important;
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+select.theme-select:hover,
+.theme-select:hover {
+  border-color: #0d9488 !important;
+  border: 1px solid #0d9488 !important;
+  background-color: #f1f5f9 !important;
+}
+
+select.theme-select:focus,
+.theme-select:focus {
+  border-color: #0d9488 !important;
+  border: 1px solid #0d9488 !important;
+  background-color: #f8fafc !important;
+  box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.25) !important;
+}
+
+/* Additional override for select dropdown options - prevent blue highlight */
+select:focus option:checked,
+select:focus option:selected,
+.form-select:focus option:checked,
+.form-select:focus option:selected,
+.theme-select:focus option:checked,
+.theme-select:focus option:selected {
+  background-color: var(--primary) !important;
+  background: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+}
+
+/* Override for active/open select dropdown */
+select:active option,
+select:focus option,
+.form-select:active option,
+.form-select:focus option,
+.theme-select:active option,
+.theme-select:focus option {
+  background-color: #ffffff !important;
+  color: var(--foreground) !important;
+}
+
+select:active option:hover,
+select:focus option:hover,
+.form-select:active option:hover,
+.form-select:focus option:hover,
+.theme-select:active option:hover,
+.theme-select:focus option:hover {
+  background-color: var(--muted) !important;
+  color: var(--foreground) !important;
+}
+
+/* Checkbox styles - Green with white checkmark */
+.form-check-input:checked {
+  background-color: #0d9488  !important;
+  border-color: #0d9488  !important;
+}
+
+.form-check-input:focus {
+  border-color: #0d9488  !important;
+  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25) !important;
+}
+
+.form-check-input:checked[type="checkbox"] {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e") !important;
+}
+
+.form-check-input[type="checkbox"]:indeterminate {
+  background-color: #198754 !important;
+  border-color: #198754 !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10h8'/%3e%3c/svg%3e") !important;
+}
+
+/* Radio button styles - Green with white dot */
+.form-check-input[type="radio"]:checked {
+  background-color: #0d9488 !important;
+  border-color: #0d9488 !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e") !important;
+}
+
+.form-check-input[type="radio"]:focus {
+  border-color: #0d9488 !important;
+  box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.25) !important;
+}
+
+/* Toggle Switch styles - Teal theme */
+.form-check-input[type="checkbox"][role="switch"]:checked {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
+}
+
+.form-check-input[type="checkbox"][role="switch"]:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.25) !important;
+}
+
+.form-check-input[type="checkbox"][role="switch"]:not(:checked) {
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
+}
+
+/* Travel theme gradient backgrounds */
+.bg-gradient-travel {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--ocean-blue) 100%);
+}
+
+.bg-gradient-sunset {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--coral-pink) 100%);
+}
+
+.bg-gradient-tropical {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--tropical-green) 100%);
+}
+
+/* Final override - Remove ALL blue colors from select - Use #0d9488 */
+select.theme-select,
+.theme-select,
+select.theme-select *,
+.theme-select * {
+  border-color: rgba(15, 23, 42, 0.1) !important;
+  border: 1px solid rgba(15, 23, 42, 0.1) !important;
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  outline: none !important;
+}
+
+select.theme-select:hover,
+.theme-select:hover {
+  border-color: #0d9488 !important;
+  border: 1px solid #0d9488 !important;
+  background-color: #f1f5f9 !important;
+  outline: none !important;
+}
+
+select.theme-select:focus,
+select.theme-select:focus-visible,
+.theme-select:focus,
+.theme-select:focus-visible {
+  border-color: #0d9488 !important;
+  border: 1px solid #0d9488 !important;
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  outline: none !important;
+  box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.25) !important;
+}
+
+/* Additional high-specificity override for Bootstrap */
+select.theme-select.w-100,
+.theme-select.w-100,
+select.theme-select.mt-2,
+.theme-select.mt-2 {
+  border-color: rgba(15, 23, 42, 0.1) !important;
+  border: 1px solid rgba(15, 23, 42, 0.1) !important;
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+select.theme-select.w-100:hover,
+.theme-select.w-100:hover,
+select.theme-select.mt-2:hover,
+.theme-select.mt-2:hover {
+  border-color: #0d9488 !important;
+  border: 1px solid #0d9488 !important;
+  background-color: #f1f5f9 !important;
+}
+
+select.theme-select.w-100:focus,
+.theme-select.w-100:focus,
+select.theme-select.mt-2:focus,
+.theme-select.mt-2:focus {
+  border-color: #0d9488 !important;
+  border: 1px solid #0d9488 !important;
+  background-color: #f8fafc !important;
+  box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.25) !important;
+}
+
+/* Remove any Bootstrap blue color variables */
+select.theme-select,
+.theme-select {
+  --bs-primary: #0d9488 !important;
+  --bs-primary-rgb: 13, 148, 136 !important;
+  --bs-border-color: var(--border) !important;
+  --bs-focus-ring-color: rgba(13, 148, 136, 0.25) !important;
+}
