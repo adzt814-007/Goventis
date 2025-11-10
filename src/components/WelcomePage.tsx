@@ -4,7 +4,7 @@ import { Button, Container, Row, Col, Card } from 'react-bootstrap';
 import { Plane, MapPin, Shield, FileCheck, Phone, Star, Car } from 'lucide-react';
 import { NavBar } from './NavBar';
 import type { User } from '../App';
-import { TAXI_SERVICES } from '../App';
+import { TAXI_SERVICES, getCountryFlagUrl } from '../App';
 
 type WelcomePageProps = {
   onNavigate: (page: string) => void;
@@ -47,7 +47,22 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
             </div>
           </div>
 
-          <h1 className="mb-4" style={{ fontSize: "clamp(20px, 5vw, 55px)", maxWidth: '56rem', fontWeight: 'bold' }}>
+          <h1 className="mb-4 d-flex align-items-center justify-content-center gap-3" style={{ fontSize: "clamp(20px, 5vw, 55px)", maxWidth: '56rem', fontWeight: 'bold' }}>
+            <img 
+              src={getCountryFlagUrl(selectedCountry, 'w40')}
+              alt={`${selectedCountry} flag`}
+              style={{ 
+                width: 'clamp(40px, 5vw, 80px)', 
+                height: 'clamp(30px, 3.75vw, 60px)', 
+                objectFit: 'cover',
+                borderRadius: '8px',
+                border: '2px solid rgba(255, 255, 255, 0.5)',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
             WELCOME TO {selectedCountry.toUpperCase()}
           </h1>
 

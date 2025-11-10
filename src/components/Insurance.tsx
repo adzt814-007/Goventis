@@ -11,6 +11,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import type { Traveler } from "../App";
+import { getCountryFlagUrl } from "../App";
 
 type InsuranceProps = {
   travelers: Traveler[];
@@ -51,7 +52,21 @@ export function Insurance({
             />
             Back
           </Button>
-          <h1 className="text-white mb-0">
+          <h1 className="text-white mb-0 d-flex align-items-center gap-2">
+            <img 
+              src={getCountryFlagUrl(selectedCountry, 'w40')}
+              alt={`${selectedCountry} flag`}
+              style={{ 
+                width: '32px', 
+                height: '24px', 
+                objectFit: 'cover',
+                borderRadius: '4px',
+                border: '1px solid rgba(255, 255, 255, 0.3)'
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
             {selectedCountry} Standard Insurance
           </h1>
           <p className="text-white mt-2 mb-0">

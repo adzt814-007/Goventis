@@ -21,6 +21,7 @@ import {
   ChevronDown
 } from 'lucide-react';
 import type { User as UserType } from '../App';
+import { getCountryFlagUrl } from '../App';
 
 type ProfileProps = {
   user: UserType | null;
@@ -160,7 +161,23 @@ export function Profile({ user, onNavigate, onLogout, currentPage, selectedCount
       <NavBar onNavigate={onNavigate} user={user} onLogout={onLogout} currentPage={currentPage} selectedCountry={selectedCountry} onCountryChange={onCountryChange} />
       <div className="bg-primary text-white py-4 mb-4" style={{ background: 'linear-gradient(to right, var(--primary), var(--ocean-blue))' }}>
         <Container>
-          <h1 className="text-white mb-2">My Profile</h1>
+          <h1 className="text-white mb-2 d-flex align-items-center gap-2">
+            <img 
+              src={getCountryFlagUrl(selectedCountry, 'w40')}
+              alt={`${selectedCountry} flag`}
+              style={{ 
+                width: '32px', 
+                height: '24px', 
+                objectFit: 'cover',
+                borderRadius: '4px',
+                border: '1px solid rgba(255, 255, 255, 0.3)'
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+            My Profile
+          </h1>
           <p className="text-white mb-0">Manage your account settings and preferences</p>
         </Container>
       </div>

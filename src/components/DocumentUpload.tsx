@@ -7,14 +7,16 @@ import { Badge } from './ui/badge';
 import { Container, Row, Col } from 'react-bootstrap';
 import { ArrowLeft, ArrowRight, Upload, FileCheck, Camera, UserPlus, Trash2, ChevronDown } from 'lucide-react';
 import type { Traveler } from '../App';
+import { getCountryFlagUrl } from '../App';
 
 type DocumentUploadProps = {
   travelers: Traveler[];
   onUpdate: (travelers: Traveler[]) => void;
   onNavigate: (page: string) => void;
+  selectedCountry?: string;
 };
 
-export function DocumentUpload({ travelers, onUpdate, onNavigate }: DocumentUploadProps) {
+export function DocumentUpload({ travelers, onUpdate, onNavigate, selectedCountry = 'Bali' }: DocumentUploadProps) {
   const [step, setStep] = useState(1);
   const [travelerCount, setTravelerCount] = useState(travelers.length || 1);
   const [currentTravelerIndex, setCurrentTravelerIndex] = useState(0);
@@ -99,6 +101,39 @@ export function DocumentUpload({ travelers, onUpdate, onNavigate }: DocumentUplo
             health: false,
             insurance: false,
             tax: false,
+          },
+          visaDetails: {
+            visaType: '',
+            mainPurpose: '',
+            subPurpose: '',
+          },
+          customsDetails: {
+            accompaniedBaggage: 0,
+            unaccompaniedBaggage: 0,
+            imeiRegistration: {
+              handphone: false,
+              handheld: false,
+              computer: false,
+              tablet: false,
+            },
+            hasElectronics: false,
+            hasCurrency: false,
+            currencyAmount: '',
+            familyDeclaration: false,
+            agreed: false,
+          },
+          healthPassDetails: {
+            hasSymptoms: false,
+            symptoms: {
+              fever: false,
+              cough: false,
+              breathing: false,
+              fatigue: false,
+              none: true,
+            },
+            exposureRisk: 'no',
+            recentTravel: '',
+            declared: false,
           },
         });
       }
@@ -212,7 +247,23 @@ export function DocumentUpload({ travelers, onUpdate, onNavigate }: DocumentUplo
             <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
             Back
           </Button>
-          <h1 className="text-white mb-0">Document Upload</h1>
+          <h1 className="text-white mb-0 d-flex align-items-center gap-2">
+            <img 
+              src={getCountryFlagUrl(selectedCountry, 'w40')}
+              alt={`${selectedCountry} flag`}
+              style={{ 
+                width: '32px', 
+                height: '24px', 
+                objectFit: 'cover',
+                borderRadius: '4px',
+                border: '1px solid rgba(255, 255, 255, 0.3)'
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+            Document Upload
+          </h1>
           <p className="text-white mt-2 mb-0">Step {step} of 4</p>
         </Container>
       </div>

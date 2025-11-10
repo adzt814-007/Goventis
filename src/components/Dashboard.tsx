@@ -18,7 +18,7 @@ import {
 import { NavBar } from './NavBar';
 import type { User, Traveler } from '../App';
 import { Footer } from './Footer';
-import { getSupportInfo } from '../App';
+import { getSupportInfo, getCountryFlagUrl } from '../App';
 
 type DashboardProps = {
   user: User | null;
@@ -81,6 +81,20 @@ export function Dashboard({ user, travelers, onNavigate, onLogout, currentPage, 
           <div className="d-flex align-items-center justify-content-between flex-wrap gap-3">
             <div>
               <h1 className="mb-2 text-white d-flex align-items-center gap-2" style={{ fontSize: 'clamp(26px, 5vw, 2rem)', fontWeight: 'bold' }}>
+                <img 
+                  src={getCountryFlagUrl(selectedCountry, 'w40')}
+                  alt={`${selectedCountry} flag`}
+                  style={{ 
+                    width: '32px', 
+                    height: '24px', 
+                    objectFit: 'cover',
+                    borderRadius: '4px',
+                    border: '1px solid rgba(255, 255, 255, 0.3)'
+                  }}
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
                 Welcome back, {user?.name || 'Traveler'}! <img src={new URL('../Images/airplane.png', import.meta.url).href} alt="Airplane" style={{ objectFit: 'contain' }} />
               </h1>
               <p className="text-white mb-0" style={{ fontSize: '1.1rem' }}>

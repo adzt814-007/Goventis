@@ -6,6 +6,7 @@ import { NavBar } from './NavBar';
 import { Container, Row, Col } from 'react-bootstrap';
 import { ChevronLeft, ChevronRight, Download, Share2, Home, CheckCircle2, QrCode as QrCodeIcon } from 'lucide-react';
 import type { Traveler } from '../App';
+import { getCountryFlagUrl } from '../App';
 
 type QRCodeProps = {
   travelers: Traveler[];
@@ -45,7 +46,23 @@ export function QRCode({ travelers, onNavigate, user, onLogout, currentPage, sel
             <CheckCircle2 style={{ width: '32px', height: '32px', color: 'white' }} />
             <div className='p-2 px-3 ' style={{border:"1px solid white",borderRadius:"16px"}}>All Complete</div>
           </div>
-          <h1 className="text-white mb-2">Entry Certificate Ready!</h1>
+          <h1 className="text-white mb-2 d-flex align-items-center gap-2">
+            <img 
+              src={getCountryFlagUrl(selectedCountry, 'w40')}
+              alt={`${selectedCountry} flag`}
+              style={{ 
+                width: '32px', 
+                height: '24px', 
+                objectFit: 'cover',
+                borderRadius: '4px',
+                border: '1px solid rgba(255, 255, 255, 0.3)'
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+            Entry Certificate Ready!
+          </h1>
           <p className="text-white mb-0">
             Your pre-arrival documentation is complete. Show these QR codes at {selectedCountry} immigration.
           </p>

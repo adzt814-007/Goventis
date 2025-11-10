@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Form, Container } from "react-bootstrap";
 import { ArrowLeft } from "lucide-react";
 import type { User } from "../App";
+import { getCountryFlagUrl } from "../App";
 
 type LoginPageProps = {
   onNavigate: (page: string) => void;
@@ -121,7 +122,23 @@ export function LoginPage({ onNavigate, onLogin, selectedCountry = 'Bali' }: Log
                 className="bg-white d-flex align-items-center justify-content-center flex-column px-3 px-sm-4 py-4 text-center"
                 style={{ fontFamily: "'Montserrat', sans-serif" }}
               >
-                <h1 className="fw-bold m-0 mb-3" style={{ fontSize: '24px', lineHeight: '1.3' }}>Sign in</h1>
+                <div className="d-flex align-items-center justify-content-center gap-2 mb-3">
+                  <img 
+                    src={getCountryFlagUrl(selectedCountry, 'w40')}
+                    alt={`${selectedCountry} flag`}
+                    style={{ 
+                      width: '28px', 
+                      height: '21px', 
+                      objectFit: 'cover',
+                      borderRadius: '4px',
+                      border: '1px solid rgba(0, 0, 0, 0.1)'
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                  <h1 className="fw-bold m-0" style={{ fontSize: '24px', lineHeight: '1.3' }}>Sign in</h1>
+                </div>
                 <div className="my-2 mb-3 d-flex justify-content-center align-items-center gap-2">
                   <a
                     href="#"
@@ -313,7 +330,23 @@ export function LoginPage({ onNavigate, onLogin, selectedCountry = 'Bali' }: Log
                 className="bg-white d-flex align-items-center justify-content-center flex-column px-3 px-sm-4 py-4 text-center"
                 style={{ fontFamily: "'Montserrat', sans-serif" }}
               >
-                <h1 className="fw-bold m-0 mb-3" style={{ fontSize: '24px', lineHeight: '1.3' }}>Create Account</h1>
+                <div className="d-flex align-items-center justify-content-center gap-2 mb-3">
+                  <img 
+                    src={getCountryFlagUrl(selectedCountry, 'w40')}
+                    alt={`${selectedCountry} flag`}
+                    style={{ 
+                      width: '28px', 
+                      height: '21px', 
+                      objectFit: 'cover',
+                      borderRadius: '4px',
+                      border: '1px solid rgba(0, 0, 0, 0.1)'
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                  <h1 className="fw-bold m-0" style={{ fontSize: '24px', lineHeight: '1.3' }}>Create Account</h1>
+                </div>
                 <div className="my-2 mb-3">
                   <a
                     href="#"
@@ -517,7 +550,23 @@ export function LoginPage({ onNavigate, onLogin, selectedCountry = 'Bali' }: Log
               className="bg-white d-flex align-items-center justify-content-center flex-column px-4 px-lg-5 py-0 h-100 text-center"
               style={{ fontFamily: "'Montserrat', sans-serif" }}
             >
-              <h1 className="fw-bold m-0" style={{ fontSize: 'clamp(1.25rem, 3vw, 1.75rem)' }}>Create Account</h1>
+              <div className="d-flex align-items-center justify-content-center gap-2 mb-3">
+                <img 
+                  src={getCountryFlagUrl(selectedCountry, 'w40')}
+                  alt={`${selectedCountry} flag`}
+                  style={{ 
+                    width: '28px', 
+                    height: '21px', 
+                    objectFit: 'cover',
+                    borderRadius: '4px',
+                    border: '1px solid rgba(0, 0, 0, 0.1)'
+                  }}
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+                <h1 className="fw-bold m-0" style={{ fontSize: 'clamp(1.25rem, 3vw, 1.75rem)' }}>Create Account</h1>
+              </div>
               <div className="my-4 d-flex justify-content-center align-items-center gap-2">
                 <a
                   href="#"
@@ -701,7 +750,23 @@ export function LoginPage({ onNavigate, onLogin, selectedCountry = 'Bali' }: Log
               className="bg-white d-flex align-items-center justify-content-center flex-column px-4 px-lg-5 py-0 h-100 text-center"
               style={{ fontFamily: "'Montserrat', sans-serif" }}
             >
-              <h1 className="fw-bold m-0" style={{ fontSize: 'clamp(1.25rem, 3vw, 1.75rem)' }}>Sign in</h1>
+              <div className="d-flex align-items-center justify-content-center gap-2 mb-3">
+                <img 
+                  src={getCountryFlagUrl(selectedCountry, 'w40')}
+                  alt={`${selectedCountry} flag`}
+                  style={{ 
+                    width: '28px', 
+                    height: '21px', 
+                    objectFit: 'cover',
+                    borderRadius: '4px',
+                    border: '1px solid rgba(0, 0, 0, 0.1)'
+                  }}
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+                <h1 className="fw-bold m-0" style={{ fontSize: 'clamp(1.25rem, 3vw, 1.75rem)' }}>Sign in</h1>
+              </div>
               <div className="my-4 d-flex justify-content-center align-items-center gap-2">
                 <a
                   href="#"

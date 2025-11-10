@@ -5,27 +5,39 @@ import { Label } from './ui/label';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Checkbox } from './ui/checkbox';
 import { Container } from 'react-bootstrap';
-import { ArrowLeft, ArrowRight, Heart } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Heart, CheckCircle2 } from 'lucide-react';
 import type { Traveler } from '../App';
+import { getCountryFlagUrl } from '../App';
 
 type HealthPassProps = {
   travelers: Traveler[];
   onUpdate: (travelers: Traveler[]) => void;
   onNavigate: (page: string) => void;
+  selectedCountry?: string;
 };
 
-export function HealthPass({ travelers, onUpdate, onNavigate }: HealthPassProps) {
+export function HealthPass({ travelers, onUpdate, onNavigate, selectedCountry = 'Bali' }: HealthPassProps) {
   const [step, setStep] = useState(1);
   const [currentTravelerIndex, setCurrentTravelerIndex] = useState(0);
+  const [hasSymptoms, setHasSymptoms] = useState<boolean>(
+    travelers[0]?.healthPassDetails?.hasSymptoms || false
+  );
   const [symptoms, setSymptoms] = useState({
-    fever: false,
-    cough: false,
-    breathing: false,
-    fatigue: false,
-    none: true,
+    fever: travelers[0]?.healthPassDetails?.symptoms?.fever || false,
+    cough: travelers[0]?.healthPassDetails?.symptoms?.cough || false,
+    breathing: travelers[0]?.healthPassDetails?.symptoms?.breathing || false,
+    fatigue: travelers[0]?.healthPassDetails?.symptoms?.fatigue || false,
+    none: travelers[0]?.healthPassDetails?.symptoms?.none !== undefined 
+      ? travelers[0]?.healthPassDetails?.symptoms?.none 
+      : true,
   });
-  const [exposureRisk, setExposureRisk] = useState('no');
-  const [recentTravel, setRecentTravel] = useState('');
+  const [exposureRisk, setExposureRisk] = useState(
+    travelers[0]?.healthPassDetails?.exposureRisk || 'no'
+  );
+  const [recentTravel, setRecentTravel] = useState(
+    travelers[0]?.healthPassDetails?.recentTravel || ''
+  );
+  const [declared, setDeclared] = useState(false);
 
   const currentTraveler = travelers[currentTravelerIndex];
 
@@ -44,16 +56,36 @@ export function HealthPass({ travelers, onUpdate, onNavigate }: HealthPassProps)
   const handleComplete = () => {
     const updatedTravelers = [...travelers];
     updatedTravelers[currentTravelerIndex].entryRequirements.health = true;
+    updatedTravelers[currentTravelerIndex].healthPassDetails = {
+      hasSymptoms,
+      symptoms,
+      exposureRisk,
+      recentTravel,
+      declared: true,
+    };
     onUpdate(updatedTravelers);
 
     if (currentTravelerIndex < travelers.length - 1) {
       setCurrentTravelerIndex(currentTravelerIndex + 1);
       setStep(1);
-      setSymptoms({ fever: false, cough: false, breathing: false, fatigue: false, none: true });
-      setExposureRisk('no');
+      setHasSymptoms(updatedTravelers[currentTravelerIndex + 1]?.healthPassDetails?.hasSymptoms || false);
+      setSymptoms(updatedTravelers[currentTravelerIndex + 1]?.healthPassDetails?.symptoms || {
+        fever: false,
+        cough: false,
+        breathing: false,
+        fatigue: false,
+        none: true,
+      });
+      setExposureRisk(updatedTravelers[currentTravelerIndex + 1]?.healthPassDetails?.exposureRisk || 'no');
+      setRecentTravel(updatedTravelers[currentTravelerIndex + 1]?.healthPassDetails?.recentTravel || '');
+      setDeclared(false);
     } else {
-      onNavigate('insurance');
+      setStep(3); // Show completed screen
     }
+  };
+
+  const handleContinueToInsurance = () => {
+    onNavigate('insurance');
   };
 
   return (
@@ -69,8 +101,26 @@ export function HealthPass({ travelers, onUpdate, onNavigate }: HealthPassProps)
             <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
             Back
           </Button>
-          <h1 className="text-white mb-0">Health Pass - SATUSEHAT (SSHP)</h1>
-          <p className="text-white mt-2 mb-0">Step {step} of 2</p>
+          <h1 className="text-white mb-0 d-flex align-items-center gap-2">
+            <img 
+              src={getCountryFlagUrl(selectedCountry, 'w40')}
+              alt={`${selectedCountry} flag`}
+              style={{ 
+                width: '32px', 
+                height: '24px', 
+                objectFit: 'cover',
+                borderRadius: '4px',
+                border: '1px solid rgba(255, 255, 255, 0.3)'
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+            Health Pass - SATUSEHAT (SSHP)
+          </h1>
+          <p className="text-white mt-2 mb-0">
+            {step === 3 ? 'Completed' : `Step ${step} of 2`}
+          </p>
         </Container>
       </div>
 
@@ -98,70 +148,88 @@ export function HealthPass({ travelers, onUpdate, onNavigate }: HealthPassProps)
 
               <div>
                 <div className="mb-4">
-                  <Label className="mb-3 d-block">Are you currently experiencing any of the following symptoms?</Label>
-                  <div>
-                    <div className="d-flex align-items-center mb-2">
-                      <Checkbox
-                        id="fever"
-                        checked={symptoms.fever}
-                        onChange={(e) => handleSymptomChange('fever', e.target.checked)}
-                      />
-                      <Label htmlFor="fever" className="mb-0 ms-2" style={{ cursor: 'pointer' }}>
-                        Fever (temperature above 38°C / 100.4°F)
-                      </Label>
-                    </div>
-                    <div className="d-flex align-items-center mb-2">
-                      <Checkbox
-                        id="cough"
-                        checked={symptoms.cough}
-                        onChange={(e) => handleSymptomChange('cough', e.target.checked)}
-                      />
-                      <Label htmlFor="cough" className="mb-0 ms-2" style={{ cursor: 'pointer' }}>
-                        Persistent cough or sore throat
-                      </Label>
-                    </div>
-                    <div className="d-flex align-items-center mb-2">
-                      <Checkbox
-                        id="breathing"
-                        checked={symptoms.breathing}
-                        onChange={(e) => handleSymptomChange('breathing', e.target.checked)}
-                      />
-                      <Label htmlFor="breathing" className="mb-0 ms-2" style={{ cursor: 'pointer' }}>
-                        Difficulty breathing or shortness of breath
-                      </Label>
-                    </div>
-                    <div className="d-flex align-items-center mb-2">
-                      <Checkbox
-                        id="fatigue"
-                        checked={symptoms.fatigue}
-                        onChange={(e) => handleSymptomChange('fatigue', e.target.checked)}
-                      />
-                      <Label htmlFor="fatigue" className="mb-0 ms-2" style={{ cursor: 'pointer' }}>
-                        Unusual fatigue or body aches
-                      </Label>
-                    </div>
-                    <div className="d-flex align-items-center pt-2 border-top">
-                      <Checkbox
-                        id="none"
-                        checked={symptoms.none}
-                        onChange={(e) => handleSymptomChange('none', e.target.checked)}
-                      />
-                      <Label htmlFor="none" className="mb-0 ms-2" style={{ cursor: 'pointer' }}>
-                        None of the above - I am in good health
-                      </Label>
-                    </div>
+                  <Label className="mb-3 d-block">Do you have any of the following symptoms?</Label>
+                  <div className="mb-3">
+                    <RadioGroup value={hasSymptoms ? 'yes' : 'no'} onValueChange={(value) => {
+                      setHasSymptoms(value === 'yes');
+                      if (value === 'no') {
+                        setSymptoms({ fever: false, cough: false, breathing: false, fatigue: false, none: true });
+                      }
+                    }}>
+                      <div className="d-flex gap-4">
+                        <div className="d-flex align-items-center">
+                          <RadioGroupItem value="yes" id="symptoms-yes" />
+                          <Label htmlFor="symptoms-yes" className="mb-0 ms-2" style={{ cursor: 'pointer' }}>
+                            Yes
+                          </Label>
+                        </div>
+                        <div className="d-flex align-items-center">
+                          <RadioGroupItem value="no" id="symptoms-no" />
+                          <Label htmlFor="symptoms-no" className="mb-0 ms-2" style={{ cursor: 'pointer' }}>
+                            No
+                          </Label>
+                        </div>
+                      </div>
+                    </RadioGroup>
                   </div>
+                  {hasSymptoms && (
+                    <div>
+                      <Label className="mb-3 d-block">Please select which symptoms you are experiencing:</Label>
+                      <div>
+                        <div className="d-flex align-items-center mb-2">
+                          <Checkbox
+                            id="fever"
+                            checked={symptoms.fever}
+                            onChange={(e) => handleSymptomChange('fever', e.target.checked)}
+                          />
+                          <Label htmlFor="fever" className="mb-0 ms-2" style={{ cursor: 'pointer' }}>
+                            Fever (temperature above 38°C / 100.4°F)
+                          </Label>
+                        </div>
+                        <div className="d-flex align-items-center mb-2">
+                          <Checkbox
+                            id="cough"
+                            checked={symptoms.cough}
+                            onChange={(e) => handleSymptomChange('cough', e.target.checked)}
+                          />
+                          <Label htmlFor="cough" className="mb-0 ms-2" style={{ cursor: 'pointer' }}>
+                            Persistent cough or sore throat
+                          </Label>
+                        </div>
+                        <div className="d-flex align-items-center mb-2">
+                          <Checkbox
+                            id="breathing"
+                            checked={symptoms.breathing}
+                            onChange={(e) => handleSymptomChange('breathing', e.target.checked)}
+                          />
+                          <Label htmlFor="breathing" className="mb-0 ms-2" style={{ cursor: 'pointer' }}>
+                            Difficulty breathing or shortness of breath
+                          </Label>
+                        </div>
+                        <div className="d-flex align-items-center mb-2">
+                          <Checkbox
+                            id="fatigue"
+                            checked={symptoms.fatigue}
+                            onChange={(e) => handleSymptomChange('fatigue', e.target.checked)}
+                          />
+                          <Label htmlFor="fatigue" className="mb-0 ms-2" style={{ cursor: 'pointer' }}>
+                            Unusual fatigue or body aches
+                          </Label>
+                        </div>
+                        <div className="d-flex align-items-center pt-2 border-top">
+                          <Checkbox
+                            id="none"
+                            checked={symptoms.none}
+                            onChange={(e) => handleSymptomChange('none', e.target.checked)}
+                          />
+                          <Label htmlFor="none" className="mb-0 ms-2" style={{ cursor: 'pointer' }}>
+                            None of the above - I am in good health
+                          </Label>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-
-                {!symptoms.none && (
-                  <div className="bg-warning bg-opacity-10 border border-warning rounded p-3 mb-4">
-                    <h4 className="mb-2 text-warning">Medical Attention Recommended</h4>
-                    <p className="small text-muted mb-0">
-                      If you are experiencing any of these symptoms, we recommend consulting with a healthcare 
-                      professional before traveling. You may be subject to additional health screening upon arrival.
-                    </p>
-                  </div>
-                )}
 
                 <div className="bg-info bg-opacity-10 border border-info rounded p-3">
                   <h4 className="mb-2">SATUSEHAT Health Pass Information</h4>
@@ -228,13 +296,23 @@ export function HealthPass({ travelers, onUpdate, onNavigate }: HealthPassProps)
                 )}
 
                 <div className="border-top pt-4">
-                  <div className="bg-success bg-opacity-10 border border-success rounded p-3">
+                  <div className="bg-success bg-opacity-10 border border-success rounded p-3 mb-3">
                     <h4 className="mb-2">Health Declaration Statement</h4>
                     <p className="small text-muted mb-0">
                       I certify that the health information provided is true and accurate to the best of my knowledge. 
                       I understand that providing false health information may result in denial of entry, quarantine, 
                       or other legal consequences. I agree to comply with all health protocols and regulations during my stay.
                     </p>
+                  </div>
+                  <div className="d-flex align-items-start gap-3">
+                    <Checkbox
+                      id="health-declared"
+                      checked={declared}
+                      onChange={(e) => setDeclared(e.target.checked)}
+                    />
+                    <Label htmlFor="health-declared" style={{ cursor: 'pointer' }}>
+                      I declare that all health information provided is accurate and complete.
+                    </Label>
                   </div>
                 </div>
 
@@ -249,11 +327,31 @@ export function HealthPass({ travelers, onUpdate, onNavigate }: HealthPassProps)
               </div>
 
               <div className="mt-4 d-flex justify-content-end">
-                <Button onClick={handleComplete}>
-                  {currentTravelerIndex < travelers.length - 1 ? 'Next Traveler' : 'Complete Health Pass'}
+                <Button onClick={handleComplete} disabled={!declared}>
+                  {currentTravelerIndex < travelers.length - 1 ? 'Next Traveler' : 'Confirm Health Pass'}
                   <ArrowRight style={{ width: '16px', height: '16px', marginLeft: '8px' }} />
                 </Button>
               </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Step 3: Completed Screen */}
+        {step === 3 && (
+          <Card style={{ borderWidth: '2px', borderColor: 'var(--success)' }} className="border-success">
+            <CardContent className="pt-4 text-center">
+              <div className="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style={{ width: '80px', height: '80px' }}>
+                <CheckCircle2 style={{ width: '48px', height: '48px', color: 'var(--success)' }} />
+              </div>
+              <h2 className="mb-3 text-success">Health Pass Completed!</h2>
+              <p className="text-muted mb-4">
+                All travelers have completed the Health Pass - SATUSEHAT (SSHP) declaration. 
+                You can now proceed to the Insurance page.
+              </p>
+              <Button onClick={handleContinueToInsurance} size="lg">
+                Continue to Insurance
+                <ArrowRight style={{ width: '20px', height: '20px', marginLeft: '8px' }} />
+              </Button>
             </CardContent>
           </Card>
         )}

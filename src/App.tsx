@@ -74,6 +74,39 @@ export type Traveler = {
     insurance: boolean;
     tax: boolean;
   };
+  visaDetails?: {
+    visaType: string;
+    mainPurpose: string;
+    subPurpose: string;
+  };
+  customsDetails?: {
+    accompaniedBaggage: number;
+    unaccompaniedBaggage: number;
+    imeiRegistration: {
+      handphone: boolean;
+      handheld: boolean;
+      computer: boolean;
+      tablet: boolean;
+    };
+    hasElectronics: boolean;
+    hasCurrency: boolean;
+    currencyAmount: string;
+    familyDeclaration: boolean;
+    agreed: boolean;
+  };
+  healthPassDetails?: {
+    hasSymptoms: boolean;
+    symptoms: {
+      fever: boolean;
+      cough: boolean;
+      breathing: boolean;
+      fatigue: boolean;
+      none: boolean;
+    };
+    exposureRisk: string;
+    recentTravel: string;
+    declared: boolean;
+  };
 };
 
 export const COUNTRIES = [
@@ -547,6 +580,7 @@ export default function App() {
           travelers={travelers}
           onUpdate={handleUpdateTravelers}
           onNavigate={handleNavigate}
+          selectedCountry={selectedCountry}
         />
       )}
 
@@ -555,6 +589,7 @@ export default function App() {
           travelers={travelers}
           onUpdate={handleUpdateTravelers}
           onNavigate={handleNavigate}
+          selectedCountry={selectedCountry}
         />
       )}
 
@@ -572,6 +607,7 @@ export default function App() {
           travelers={travelers}
           onUpdate={handleUpdateTravelers}
           onNavigate={handleNavigate}
+          selectedCountry={selectedCountry}
         />
       )}
 
@@ -580,6 +616,7 @@ export default function App() {
           travelers={travelers}
           onUpdate={handleUpdateTravelers}
           onNavigate={handleNavigate}
+          selectedCountry={selectedCountry}
         />
       )}
 
@@ -657,6 +694,7 @@ export default function App() {
       {currentPage === 'payment-success' && (
         <PaymentSuccess
           onNavigate={handleNavigate}
+          selectedCountry={selectedCountry}
         />
       )}
     </div>

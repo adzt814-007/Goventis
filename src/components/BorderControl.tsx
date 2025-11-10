@@ -5,6 +5,7 @@ import { Badge } from './ui/badge';
 import { Container, Row, Col } from 'react-bootstrap';
 import { ChevronLeft, ChevronRight, CheckCircle2, Shield, FileCheck, Heart, Plane, ArrowLeft, X } from 'lucide-react';
 import type { Traveler } from '../App';
+import { getCountryFlagUrl } from '../App';
 
 type BorderControlProps = {
   travelers: Traveler[];
@@ -64,7 +65,23 @@ export function BorderControl({ travelers, onNavigate, selectedCountry = 'Bali',
                 <Shield style={{ width: '28px', height: '28px', color: 'var(--primary)' }} />
               </div>
               <div>
-                <h1 className="text-white mb-0 fw-bold" style={{ fontSize: 'clamp(1.5rem, 2vw, 1.75rem)' }}>Border Control System</h1>
+                <h1 className="text-white mb-0 fw-bold d-flex align-items-center gap-2" style={{ fontSize: 'clamp(1.5rem, 2vw, 1.75rem)' }}>
+                  <img 
+                    src={getCountryFlagUrl(selectedCountry, 'w40')}
+                    alt={`${selectedCountry} flag`}
+                    style={{ 
+                      width: '32px', 
+                      height: '24px', 
+                      objectFit: 'cover',
+                      borderRadius: '4px',
+                      border: '1px solid rgba(255, 255, 255, 0.3)'
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                  Border Control System
+                </h1>
                 <p className="text-white small mb-0">Immigration Officer View</p>
               </div>
             </div>

@@ -5,6 +5,7 @@ import { Badge } from './ui/badge';
 import { Container, Row, Col } from 'react-bootstrap';
 import { ArrowLeft, ArrowRight, DollarSign, Users } from 'lucide-react';
 import type { Traveler } from '../App';
+import { getCountryFlagUrl } from '../App';
 
 type ArrivalTaxProps = {
   travelers: Traveler[];
@@ -39,7 +40,23 @@ export function ArrivalTax({ travelers, onUpdate, onNavigate, selectedCountry = 
             <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
             Back
           </Button>
-          <h1 className="text-white mb-0">{selectedCountry} Arrival Tax Payment</h1>
+          <h1 className="text-white mb-0 d-flex align-items-center gap-2">
+            <img 
+              src={getCountryFlagUrl(selectedCountry, 'w40')}
+              alt={`${selectedCountry} flag`}
+              style={{ 
+                width: '32px', 
+                height: '24px', 
+                objectFit: 'cover',
+                borderRadius: '4px',
+                border: '1px solid rgba(255, 255, 255, 0.3)'
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+            {selectedCountry} Arrival Tax Payment
+          </h1>
           <p className="text-white mt-2 mb-0">Mandatory tax for all visitors</p>
         </Container>
       </div>

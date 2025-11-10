@@ -8,32 +8,66 @@ import { Checkbox } from './ui/checkbox';
 import { Container } from 'react-bootstrap';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import type { Traveler } from '../App';
+import { getCountryFlagUrl } from '../App';
 
 type CustomsDeclarationProps = {
   travelers: Traveler[];
   onUpdate: (travelers: Traveler[]) => void;
   onNavigate: (page: string) => void;
+  selectedCountry?: string;
 };
 
-export function CustomsDeclaration({ travelers, onUpdate, onNavigate }: CustomsDeclarationProps) {
+export function CustomsDeclaration({ travelers, onUpdate, onNavigate, selectedCountry = 'Bali' }: CustomsDeclarationProps) {
   const [step, setStep] = useState(1);
   const [currentTravelerIndex, setCurrentTravelerIndex] = useState(0);
   const [baggageType, setBaggageType] = useState('accompanied');
+  const [accompaniedBaggage, setAccompaniedBaggage] = useState<number>(
+    travelers[0]?.customsDetails?.accompaniedBaggage || 0
+  );
+  const [unaccompaniedBaggage, setUnaccompaniedBaggage] = useState<number>(
+    travelers[0]?.customsDetails?.unaccompaniedBaggage || 0
+  );
+  const [imeiRegistration, setImeiRegistration] = useState({
+    handphone: travelers[0]?.customsDetails?.imeiRegistration?.handphone || false,
+    handheld: travelers[0]?.customsDetails?.imeiRegistration?.handheld || false,
+    computer: travelers[0]?.customsDetails?.imeiRegistration?.computer || false,
+    tablet: travelers[0]?.customsDetails?.imeiRegistration?.tablet || false,
+  });
   const [hasElectronics, setHasElectronics] = useState(false);
   const [hasCurrency, setHasCurrency] = useState(false);
   const [currencyAmount, setCurrencyAmount] = useState('');
   const [familyDeclaration, setFamilyDeclaration] = useState(false);
+  const [agreed, setAgreed] = useState(false);
 
   const currentTraveler = travelers[currentTravelerIndex];
 
   const handleComplete = () => {
     const updatedTravelers = [...travelers];
     updatedTravelers[currentTravelerIndex].entryRequirements.customs = true;
+    updatedTravelers[currentTravelerIndex].customsDetails = {
+      accompaniedBaggage,
+      unaccompaniedBaggage,
+      imeiRegistration,
+      hasElectronics,
+      hasCurrency,
+      currencyAmount,
+      familyDeclaration,
+      agreed: true,
+    };
     onUpdate(updatedTravelers);
 
     if (currentTravelerIndex < travelers.length - 1) {
       setCurrentTravelerIndex(currentTravelerIndex + 1);
       setStep(1);
+      setAccompaniedBaggage(updatedTravelers[currentTravelerIndex + 1]?.customsDetails?.accompaniedBaggage || 0);
+      setUnaccompaniedBaggage(updatedTravelers[currentTravelerIndex + 1]?.customsDetails?.unaccompaniedBaggage || 0);
+      setImeiRegistration(updatedTravelers[currentTravelerIndex + 1]?.customsDetails?.imeiRegistration || {
+        handphone: false,
+        handheld: false,
+        computer: false,
+        tablet: false,
+      });
+      setAgreed(false);
     } else {
       onNavigate('health-pass');
     }
@@ -52,7 +86,23 @@ export function CustomsDeclaration({ travelers, onUpdate, onNavigate }: CustomsD
             <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
             Back
           </Button>
-          <h1 className="text-white mb-0">Customs Declaration</h1>
+          <h1 className="text-white mb-0 d-flex align-items-center gap-2">
+            <img 
+              src={getCountryFlagUrl(selectedCountry, 'w40')}
+              alt={`${selectedCountry} flag`}
+              style={{ 
+                width: '32px', 
+                height: '24px', 
+                objectFit: 'cover',
+                borderRadius: '4px',
+                border: '1px solid rgba(255, 255, 255, 0.3)'
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+            Customs Declaration
+          </h1>
           <p className="text-white mt-2 mb-0">Step {step} of 2</p>
         </Container>
       </div>
@@ -72,59 +122,113 @@ export function CustomsDeclaration({ travelers, onUpdate, onNavigate }: CustomsD
               <h3 className="mb-4">Baggage Information & Electronic Goods</h3>
 
               <div>
-                {/* Baggage Type */}
+                {/* Baggage Numbers */}
                 <div className="mb-4">
-                  <Label className="mb-3 d-block">Baggage Type</Label>
-                  <RadioGroup value={baggageType} onValueChange={setBaggageType}>
-                    <div>
-                      <div className="d-flex align-items-center mb-2">
-                        <RadioGroupItem value="accompanied" id="accompanied" />
-                        <Label htmlFor="accompanied" className="mb-0 ms-2" style={{ cursor: 'pointer' }}>
-                          Accompanied Baggage (traveling with you)
-                        </Label>
-                      </div>
-                      <div className="d-flex align-items-center mb-2">
-                        <RadioGroupItem value="unaccompanied" id="unaccompanied" />
-                        <Label htmlFor="unaccompanied" className="mb-0 ms-2" style={{ cursor: 'pointer' }}>
-                          Unaccompanied Baggage (shipped separately)
-                        </Label>
-                      </div>
-                      <div className="d-flex align-items-center mb-2">
-                        <RadioGroupItem value="both" id="both" />
-                        <Label htmlFor="both" className="mb-0 ms-2" style={{ cursor: 'pointer' }}>
-                          Both Accompanied and Unaccompanied
-                        </Label>
-                      </div>
+                  <Label className="mb-3 d-block">Baggage Information</Label>
+                  <div className="row g-3">
+                    <div className="col-md-6">
+                      <Label htmlFor="accompaniedBaggage" className="mb-2">Number of Accompanied Baggage</Label>
+                      <Input
+                        id="accompaniedBaggage"
+                        type="number"
+                        min="0"
+                        value={accompaniedBaggage}
+                        onChange={(e) => setAccompaniedBaggage(parseInt(e.target.value) || 0)}
+                        placeholder="0"
+                        className="mt-2"
+                      />
+                      <p className="small text-muted mt-1 mb-0">Baggage traveling with you</p>
                     </div>
-                  </RadioGroup>
-                </div>
-
-                {/* Electronic Goods Declaration */}
-                <div className="border-top pt-4">
-                  <div className="d-flex align-items-start gap-3 mb-3">
-                    <Checkbox
-                      id="electronics"
-                      checked={hasElectronics}
-                      onChange={(e) => setHasElectronics(e.target.checked)}
-                    />
-                    <div>
-                      <Label htmlFor="electronics" style={{ cursor: 'pointer' }}>
-                        I am bringing electronic goods (laptops, cameras, drones, etc.)
-                      </Label>
-                      <p className="small text-muted mt-1 mb-0">
-                        Check this box if you're carrying electronic items that may require declaration
-                      </p>
+                    <div className="col-md-6">
+                      <Label htmlFor="unaccompaniedBaggage" className="mb-2">Number of Unaccompanied Baggage</Label>
+                      <Input
+                        id="unaccompaniedBaggage"
+                        type="number"
+                        min="0"
+                        value={unaccompaniedBaggage}
+                        onChange={(e) => setUnaccompaniedBaggage(parseInt(e.target.value) || 0)}
+                        placeholder="0"
+                        className="mt-2"
+                      />
+                      <p className="small text-muted mt-1 mb-0">Baggage shipped separately</p>
                     </div>
                   </div>
+                </div>
 
-                  {hasElectronics && (
-                    <div className="ms-lg-5 mb-3 bg-info bg-opacity-10 border border-info rounded p-3">
-                      <p className="small text-muted mb-0">
-                        Personal electronic items for personal use are generally allowed. Commercial quantities 
-                        may require additional documentation. Please have receipts available for high-value items.
-                      </p>
+                {/* IMEI Registration */}
+                <div className="border-top pt-4">
+                  <Label className="mb-3 d-block">IMEI Registration</Label>
+                  <p className="small text-muted mb-3">
+                    Please indicate which electronic devices you are bringing that require IMEI registration:
+                  </p>
+                  <div className="d-flex flex-column gap-3">
+                    <div className="d-flex align-items-center justify-content-between p-3 border rounded">
+                      <Label htmlFor="imei-handphone" className="mb-0" style={{ cursor: 'pointer' }}>
+                        Handphone / Mobile Phone
+                      </Label>
+                      <div className="form-check form-switch">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="imei-handphone"
+                          checked={imeiRegistration.handphone}
+                          onChange={(e) => setImeiRegistration({ ...imeiRegistration, handphone: e.target.checked })}
+                          style={{ width: '3rem', height: '1.5rem', cursor: 'pointer' }}
+                        />
+                      </div>
                     </div>
-                  )}
+                    <div className="d-flex align-items-center justify-content-between p-3 border rounded">
+                      <Label htmlFor="imei-handheld" className="mb-0" style={{ cursor: 'pointer' }}>
+                        Handheld Device
+                      </Label>
+                      <div className="form-check form-switch">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="imei-handheld"
+                          checked={imeiRegistration.handheld}
+                          onChange={(e) => setImeiRegistration({ ...imeiRegistration, handheld: e.target.checked })}
+                          style={{ width: '3rem', height: '1.5rem', cursor: 'pointer' }}
+                        />
+                      </div>
+                    </div>
+                    <div className="d-flex align-items-center justify-content-between p-3 border rounded">
+                      <Label htmlFor="imei-computer" className="mb-0" style={{ cursor: 'pointer' }}>
+                        Computer / Laptop
+                      </Label>
+                      <div className="form-check form-switch">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="imei-computer"
+                          checked={imeiRegistration.computer}
+                          onChange={(e) => setImeiRegistration({ ...imeiRegistration, computer: e.target.checked })}
+                          style={{ width: '3rem', height: '1.5rem', cursor: 'pointer' }}
+                        />
+                      </div>
+                    </div>
+                    <div className="d-flex align-items-center justify-content-between p-3 border rounded">
+                      <Label htmlFor="imei-tablet" className="mb-0" style={{ cursor: 'pointer' }}>
+                        Tablet
+                      </Label>
+                      <div className="form-check form-switch">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="imei-tablet"
+                          checked={imeiRegistration.tablet}
+                          onChange={(e) => setImeiRegistration({ ...imeiRegistration, tablet: e.target.checked })}
+                          style={{ width: '3rem', height: '1.5rem', cursor: 'pointer' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-3 bg-info bg-opacity-10 border border-info rounded p-3">
+                    <p className="small text-muted mb-0">
+                      IMEI registration is required for electronic devices brought into {selectedCountry}. 
+                      Please ensure all devices are registered upon arrival.
+                    </p>
+                  </div>
                 </div>
 
                 {/* Prohibited Items Warning */}
@@ -223,7 +327,7 @@ export function CustomsDeclaration({ travelers, onUpdate, onNavigate }: CustomsD
 
                 {/* Declaration Statement */}
                 <div className="border-top pt-4">
-                  <div className="bg-info bg-opacity-10 border border-info rounded p-3">
+                  <div className="bg-info bg-opacity-10 border border-info rounded p-3 mb-3">
                     <h4 className="mb-2">Customs Declaration Statement</h4>
                     <p className="small text-muted mb-0">
                       I declare that all information provided in this customs declaration is true and accurate. 
@@ -232,11 +336,21 @@ export function CustomsDeclaration({ travelers, onUpdate, onNavigate }: CustomsD
                       laws and regulations.
                     </p>
                   </div>
+                  <div className="d-flex align-items-start gap-3">
+                    <Checkbox
+                      id="customs-agreed"
+                      checked={agreed}
+                      onChange={(e) => setAgreed(e.target.checked)}
+                    />
+                    <Label htmlFor="customs-agreed" style={{ cursor: 'pointer' }}>
+                      I agree to the above declaration and confirm that all information provided is accurate.
+                    </Label>
+                  </div>
                 </div>
               </div>
 
               <div className="mt-4 d-flex justify-content-end">
-                <Button onClick={handleComplete}>
+                <Button onClick={handleComplete} disabled={!agreed}>
                   {currentTravelerIndex < travelers.length - 1 ? 'Next Traveler' : 'Complete Customs Declaration'}
                   <ArrowRight style={{ width: '16px', height: '16px', marginLeft: '8px' }} />
                 </Button>
@@ -248,3 +362,4 @@ export function CustomsDeclaration({ travelers, onUpdate, onNavigate }: CustomsD
     </div>
   );
 }
+

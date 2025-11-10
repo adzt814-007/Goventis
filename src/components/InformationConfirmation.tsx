@@ -7,19 +7,22 @@ import { Badge } from './ui/badge';
 import { Checkbox } from './ui/checkbox';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Container, Row, Col } from 'react-bootstrap';
-import { ArrowLeft, ArrowRight, Check, UserPlus, ChevronDown } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, UserPlus, ChevronDown, CheckCircle2, Info } from 'lucide-react';
 import type { Traveler } from '../App';
-import { COUNTRIES } from '../App';
+import { COUNTRIES, getCountryFlagUrl } from '../App';
 
 type InformationConfirmationProps = {
   travelers: Traveler[];
   onUpdate: (travelers: Traveler[]) => void;
   onNavigate: (page: string) => void;
+  selectedCountry?: string;
 };
 
-export function InformationConfirmation({ travelers, onUpdate, onNavigate }: InformationConfirmationProps) {
+export function InformationConfirmation({ travelers, onUpdate, onNavigate, selectedCountry = 'Bali' }: InformationConfirmationProps) {
   const [currentTravelerIndex, setCurrentTravelerIndex] = useState(0);
-  const [step, setStep] = useState(5); // Steps 5-8
+  const [step, setStep] = useState(5); // Steps 5-9
+  const [showPleaseNote, setShowPleaseNote] = useState(false);
+  const [showThankYou, setShowThankYou] = useState(false);
 
   const currentTraveler = travelers[currentTravelerIndex];
 
@@ -39,11 +42,22 @@ export function InformationConfirmation({ travelers, onUpdate, onNavigate }: Inf
         setCurrentTravelerIndex(currentTravelerIndex + 1);
         setStep(5);
       } else {
-        onNavigate('visa-application');
+        // Show Please Note screen first
+        setShowPleaseNote(true);
       }
     } else {
       setStep(step + 1);
     }
+  };
+
+  const handlePleaseNoteOk = () => {
+    setShowPleaseNote(false);
+    setShowThankYou(true);
+  };
+
+  const handleThankYouNext = () => {
+    setShowThankYou(false);
+    onNavigate('visa-application');
   };
 
   const handleBack = () => {
@@ -62,6 +76,357 @@ export function InformationConfirmation({ travelers, onUpdate, onNavigate }: Inf
 
   const progress = ((step - 4) / 5) * 100;
 
+  // Show Please Note screen
+  if (showPleaseNote) {
+    return (
+      <div className="min-vh-100 pb-5" style={{ backgroundColor: '#f8fafc' }}>
+        <div className="bg-primary text-white py-5 mb-5" style={{ 
+          background: 'linear-gradient(135deg, var(--primary) 0%, var(--ocean-blue) 100%)',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+        }}>
+          <Container>
+            <Button
+              variant="link"
+              onClick={() => {
+                setShowPleaseNote(false);
+                // Return to step 9 of Information Confirmation
+                setStep(9);
+              }}
+              className="text-white mb-3 p-0"
+              style={{ textDecoration: 'none' }}
+            >
+              <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
+              Back
+            </Button>
+            <h1 className="text-white mb-0 d-flex align-items-center gap-2" style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)' }}>
+              <img 
+                src={getCountryFlagUrl(selectedCountry, 'w40')}
+                alt={`${selectedCountry} flag`}
+                style={{ 
+                  width: '40px', 
+                  height: '30px', 
+                  objectFit: 'cover',
+                  borderRadius: '6px',
+                  border: '2px solid rgba(255, 255, 255, 0.4)',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)'
+                }}
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+              Please Note
+            </h1>
+          </Container>
+        </div>
+
+        <Container>
+          <div className="d-flex justify-content-center">
+            <Card style={{ 
+              borderWidth: '0',
+              maxWidth: '900px', 
+              width: '100%',
+              boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)',
+              borderRadius: '16px',
+              overflow: 'hidden'
+            }}>
+              <CardContent className="p-5">
+                <div className="text-center mb-5">
+                  <div className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style={{ 
+                    width: '100px', 
+                    height: '100px',
+                    border: '3px solid rgba(13, 148, 136, 0.2)'
+                  }}>
+                    <Info style={{ width: '56px', height: '56px', color: 'white' }} />
+                  </div>
+                  <h2 className="mb-2" style={{ 
+                    fontSize: 'clamp(1.5rem, 2.5vw, 2rem)',
+                    fontWeight: '700',
+                    color: '#1e293b'
+                  }}>
+                    Important Information
+                  </h2>
+                  <div className="bg-primary bg-opacity-10 rounded-pill d-inline-block px-4 py-2 mb-3">
+                    <span className="small fw-semibold" style={{ color: 'white' }}>
+                      Review Before Proceeding
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="mb-5">
+                  <p className="text-muted mb-4 text-center" style={{ 
+                    fontSize: '1.1rem', 
+                    lineHeight: '1.8',
+                    color: '#64748b'
+                  }}>
+                    Before proceeding to the Entry Visa Application, please review the following important points:
+                  </p>
+                  <div className="bg-light rounded p-4" style={{ backgroundColor: '#f8fafc' }}>
+                    <ul className="mb-0" style={{ 
+                      fontSize: '1rem', 
+                      lineHeight: '2.2', 
+                      paddingLeft: '1.5rem',
+                      color: '#475569'
+                    }}>
+                      <li className="mb-3 d-flex align-items-start">
+                        <CheckCircle2 style={{ 
+                          width: '20px', 
+                          height: '20px', 
+                          color: 'var(--success)', 
+                          marginRight: '12px',
+                          marginTop: '4px',
+                          flexShrink: 0
+                        }} />
+                        <span>All document uploads have been successfully completed and verified</span>
+                      </li>
+                      <li className="mb-3 d-flex align-items-start">
+                        <CheckCircle2 style={{ 
+                          width: '20px', 
+                          height: '20px', 
+                          color: 'var(--success)', 
+                          marginRight: '12px',
+                          marginTop: '4px',
+                          flexShrink: 0
+                        }} />
+                        <span>All personal information has been confirmed and is ready for visa processing</span>
+                      </li>
+                      <li className="mb-3 d-flex align-items-start">
+                        <CheckCircle2 style={{ 
+                          width: '20px', 
+                          height: '20px', 
+                          color: 'var(--success)', 
+                          marginRight: '12px',
+                          marginTop: '4px',
+                          flexShrink: 0
+                        }} />
+                        <span>Please ensure all details are accurate before proceeding to the visa application</span>
+                      </li>
+                      <li className="mb-3 d-flex align-items-start">
+                        <CheckCircle2 style={{ 
+                          width: '20px', 
+                          height: '20px', 
+                          color: 'var(--success)', 
+                          marginRight: '12px',
+                          marginTop: '4px',
+                          flexShrink: 0
+                        }} />
+                        <span>You will now proceed to the Entry Visa Application process</span>
+                      </li>
+                      <li className="d-flex align-items-start">
+                        <CheckCircle2 style={{ 
+                          width: '20px', 
+                          height: '20px', 
+                          color: 'var(--success)', 
+                          marginRight: '12px',
+                          marginTop: '4px',
+                          flexShrink: 0
+                        }} />
+                        <span>Make sure you have all required documents ready for the visa application</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="d-flex justify-content-center mt-5 pt-4 border-top">
+                  <Button 
+                    onClick={handlePleaseNoteOk} 
+                    size="lg" 
+                    style={{ 
+                      minWidth: '220px',
+                      padding: '0.875rem 2rem',
+                      fontSize: '1.1rem',
+                      fontWeight: '600',
+                      borderRadius: '10px',
+                      boxShadow: '0 4px 12px rgba(13, 148, 136, 0.3)',
+                      transition: 'all 0.3s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 6px 20px rgba(13, 148, 136, 0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(13, 148, 136, 0.3)';
+                    }}
+                  >
+                    I Understand, Continue
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </Container>
+      </div>
+    );
+  }
+
+  // Show Thank You screen
+  if (showThankYou) {
+    return (
+      <div className="min-vh-100 pb-5" style={{ backgroundColor: '#f8fafc' }}>
+        <div className="bg-primary text-white py-5 mb-5" style={{ 
+          background: 'linear-gradient(135deg, var(--primary) 0%, var(--ocean-blue) 100%)',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+        }}>
+          <Container>
+            <Button
+              variant="link"
+              onClick={() => {
+                setShowThankYou(false);
+                setShowPleaseNote(true);
+              }}
+              className="text-white mb-3 p-0"
+              style={{ textDecoration: 'none' }}
+            >
+              <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
+              Back
+            </Button>
+            <h1 className="text-white mb-0 d-flex align-items-center gap-2" style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)' }}>
+              <img 
+                src={getCountryFlagUrl(selectedCountry, 'w40')}
+                alt={`${selectedCountry} flag`}
+                style={{ 
+                  width: '40px', 
+                  height: '30px', 
+                  objectFit: 'cover',
+                  borderRadius: '6px',
+                  border: '2px solid rgba(255, 255, 255, 0.4)',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)'
+                }}
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+              Thank You
+            </h1>
+          </Container>
+        </div>
+
+        <Container>
+          <div className="d-flex justify-content-center">
+            <Card style={{ 
+              borderWidth: '0',
+              maxWidth: '900px', 
+              width: '100%',
+              boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)',
+              borderRadius: '16px',
+              overflow: 'hidden',
+              background: 'linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%)'
+            }}>
+              <CardContent className="p-5">
+                <div className="text-center mb-5">
+                  <div className="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style={{ 
+                    width: '120px', 
+                    height: '120px',
+                    border: '4px solid rgba(25, 135, 84, 0.2)',
+                    animation: 'pulse 2s infinite'
+                  }}>
+                    <CheckCircle2 style={{ 
+                      width: '64px', 
+                      height: '64px', 
+                      color: 'var(--success)',
+                      filter: 'drop-shadow(0 2px 4px rgba(25, 135, 84, 0.3))'
+                    }} />
+                  </div>
+                  <h2 className="mb-3" style={{ 
+                    fontSize: 'clamp(1.75rem, 3vw, 2.5rem)',
+                    fontWeight: '700',
+                    color: '#1e293b',
+                    letterSpacing: '-0.02em'
+                  }}>
+                    Thank You!
+                  </h2>
+                  <div className="bg-success bg-opacity-10 rounded-pill d-inline-block px-4 py-2 mb-4">
+                    <span className="small fw-semibold" style={{ color: 'var(--success)' }}>
+                      ✓ All Information Confirmed
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mb-5">
+                  <div className="bg-white rounded p-4 mb-4" style={{ 
+                    border: '1px solid #e2e8f0',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)'
+                  }}>
+                    <p className="text-center mb-3" style={{ 
+                      fontSize: '1.15rem', 
+                      lineHeight: '1.8',
+                      color: '#475569',
+                      fontWeight: '500'
+                    }}>
+                      Thank you for providing all your details.
+                    </p>
+                    <p className="text-center mb-0" style={{ 
+                      fontSize: '1rem', 
+                      lineHeight: '1.8',
+                      color: '#64748b'
+                    }}>
+                      Your document upload and information confirmation have been successfully completed and verified.
+                    </p>
+                  </div>
+                  
+                  <div className="bg-primary bg-opacity-5 border-start border-primary border-4 rounded p-4">
+                    <div className="d-flex align-items-start gap-3">
+                      <div className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style={{ 
+                        width: '48px', 
+                        height: '48px'
+                      }}>
+                        <CheckCircle2 style={{ 
+                          width: '34px', 
+                          height: '34px', 
+                          color: 'white'
+                        }} />
+                      </div>
+                      <div>
+                        <h4 className="mb-2" style={{ color: 'white', fontSize: '1.1rem' }}>
+                          Ready to Continue
+                        </h4>
+                        <p className="mb-0" style={{ 
+                          fontSize: '0.95rem',
+                          color: '#fff',
+                          lineHeight: '1.7'
+                        }}>
+                          You can now proceed to the Entry Visa Application to continue with your travel documentation process. 
+                          All your information is securely stored and ready for visa processing.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="d-flex justify-content-center mt-5 pt-4 border-top">
+                  <Button 
+                    onClick={handleThankYouNext} 
+                    size="lg" 
+                    style={{ 
+                      minWidth: '280px',
+                      padding: '0.875rem 2rem',
+                      fontSize: '1.1rem',
+                      fontWeight: '600',
+                      borderRadius: '10px',
+                      boxShadow: '0 4px 12px rgba(13, 148, 136, 0.3)',
+                      transition: 'all 0.3s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 6px 20px rgba(13, 148, 136, 0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(13, 148, 136, 0.3)';
+                    }}
+                  >
+                    Continue to Entry Visa Application
+                    <ArrowRight style={{ width: '20px', height: '20px', marginLeft: '10px' }} />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </Container>
+      </div>
+    );
+  }
+
   return (
     <div className="min-vh-100 pb-5">
       <div className="bg-primary text-white py-4 mb-4">
@@ -75,7 +440,23 @@ export function InformationConfirmation({ travelers, onUpdate, onNavigate }: Inf
             <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
             Back
           </Button>
-          <h1 className="text-white mb-0">Information Confirmation</h1>
+          <h1 className="text-white mb-0 d-flex align-items-center gap-2">
+            <img 
+              src={getCountryFlagUrl(selectedCountry, 'w40')}
+              alt={`${selectedCountry} flag`}
+              style={{ 
+                width: '32px', 
+                height: '24px', 
+                objectFit: 'cover',
+                borderRadius: '4px',
+                border: '1px solid rgba(255, 255, 255, 0.3)'
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+            Information Confirmation
+          </h1>
           <p className="text-white mt-2 mb-0">Step {step} of 9</p>
         </Container>
       </div>

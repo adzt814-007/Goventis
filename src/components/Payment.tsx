@@ -8,6 +8,7 @@ import { Badge } from './ui/badge';
 import { Container, Row, Col } from 'react-bootstrap';
 import { ArrowLeft, ArrowRight, CreditCard, Building2, Wallet, CheckCircle2 } from 'lucide-react';
 import type { Traveler } from '../App';
+import { getCountryFlagUrl } from '../App';
 
 type PaymentProps = {
   travelers: Traveler[];
@@ -53,7 +54,23 @@ export function Payment({ travelers, user, onNavigate, selectedCountry = 'Bali' 
             <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
             Back
           </Button>
-          <h1 className="text-white mb-0">Payment</h1>
+          <h1 className="text-white mb-0 d-flex align-items-center gap-2">
+            <img 
+              src={getCountryFlagUrl(selectedCountry, 'w40')}
+              alt={`${selectedCountry} flag`}
+              style={{ 
+                width: '32px', 
+                height: '24px', 
+                objectFit: 'cover',
+                borderRadius: '4px',
+                border: '1px solid rgba(255, 255, 255, 0.3)'
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+            Payment
+          </h1>
           <p className="text-white mt-2 mb-0">Step {step} of 3</p>
         </Container>
       </div>

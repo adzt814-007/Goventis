@@ -3,6 +3,7 @@ import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { Container, Row, Col } from 'react-bootstrap';
 import { ArrowLeft, Clock, FileText, Users, Check } from 'lucide-react';
+import { getCountryFlagUrl } from '../App';
 
 type PreArrivalIntroProps = {
   onNavigate: (page: string) => void;
@@ -23,7 +24,23 @@ export function PreArrivalIntro({ onNavigate, selectedCountry = 'Bali' }: PreArr
             <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
             Back to Dashboard
           </Button>
-          <h1 className="text-white mb-0">Pre-Arrival Documentation</h1>
+          <h1 className="text-white mb-0 d-flex align-items-center gap-2">
+            <img 
+              src={getCountryFlagUrl(selectedCountry, 'w40')}
+              alt={`${selectedCountry} flag`}
+              style={{ 
+                width: '32px', 
+                height: '24px', 
+                objectFit: 'cover',
+                borderRadius: '4px',
+                border: '1px solid rgba(255, 255, 255, 0.3)'
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+            Pre-Arrival Documentation
+          </h1>
           <p className="text-white mt-2 mb-0">Complete your entry requirements in 8 simple steps</p>
         </Container>
       </div>

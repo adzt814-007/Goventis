@@ -16,6 +16,7 @@ import {
   Clock
 } from 'lucide-react';
 import type { Traveler } from '../App';
+import { getCountryFlagUrl } from '../App';
 
 type MyTripProps = {
   travelers: Traveler[];
@@ -36,7 +37,23 @@ export function MyTrip({ travelers, onNavigate, user, onLogout, currentPage, sel
         <NavBar onNavigate={onNavigate} user={user} onLogout={onLogout} currentPage={currentPage} selectedCountry={selectedCountry} onCountryChange={onCountryChange} />
         <div className="bg-primary text-white py-4 mb-4" style={{ background: 'linear-gradient(to right, var(--primary), var(--ocean-blue))' }}>
           <Container>
-            <h1 className="text-white mb-0">My Trip</h1>
+            <h1 className="text-white mb-0 d-flex align-items-center gap-2">
+            <img 
+              src={getCountryFlagUrl(selectedCountry, 'w40')}
+              alt={`${selectedCountry} flag`}
+              style={{ 
+                width: '32px', 
+                height: '24px', 
+                objectFit: 'cover',
+                borderRadius: '4px',
+                border: '1px solid rgba(255, 255, 255, 0.3)'
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+            My Trip
+          </h1>
             <p className="text-white-50 mt-2 mb-0">Your travel itinerary and documents</p>
           </Container>
         </div>
@@ -69,7 +86,23 @@ export function MyTrip({ travelers, onNavigate, user, onLogout, currentPage, sel
       <NavBar onNavigate={onNavigate} user={user} onLogout={onLogout} currentPage={currentPage} selectedCountry={selectedCountry} onCountryChange={onCountryChange} />
       <div className="bg-primary text-white py-4 mb-4" style={{ background: 'linear-gradient(to right, var(--primary), var(--ocean-blue))' }}>
         <Container>
-          <h1 className="text-white mb-2">My Trip to {selectedCountry}</h1>
+          <h1 className="text-white mb-2 d-flex align-items-center gap-2">
+            <img 
+              src={getCountryFlagUrl(selectedCountry, 'w40')}
+              alt={`${selectedCountry} flag`}
+              style={{ 
+                width: '32px', 
+                height: '24px', 
+                objectFit: 'cover',
+                borderRadius: '4px',
+                border: '1px solid rgba(255, 255, 255, 0.3)'
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+            My Trip to {selectedCountry}
+          </h1>
           <p className="text-white mb-0">Your complete travel itinerary and documentation</p>
           {daysUntilTrip > 0 && (
             <div className="mt-3 d-inline-flex align-items-center gap-2 bg-white bg-opacity-20 rounded-pill px-3 py-2">

@@ -7,6 +7,7 @@ import { Badge } from './ui/badge';
 import { Container } from 'react-bootstrap';
 import { ArrowLeft, ArrowRight, FileText, CreditCard } from 'lucide-react';
 import type { Traveler } from '../App';
+import { getCountryFlagUrl } from '../App';
 
 type VisaApplicationProps = {
   travelers: Traveler[];
@@ -18,10 +19,65 @@ type VisaApplicationProps = {
 export function VisaApplication({ travelers, onUpdate, onNavigate, selectedCountry = 'Bali' }: VisaApplicationProps) {
   const [step, setStep] = useState(1);
   const [currentTravelerIndex, setCurrentTravelerIndex] = useState(0);
-  const [visaType, setVisaType] = useState<string>('tourist-30');
+  const [visaType, setVisaType] = useState<string>(travelers[0]?.visaDetails?.visaType || 'tourist-30');
+  const [mainPurpose, setMainPurpose] = useState<string>(travelers[0]?.visaDetails?.mainPurpose || '');
+  const [subPurpose, setSubPurpose] = useState<string>(travelers[0]?.visaDetails?.subPurpose || '');
   const [signatureAgreed, setSignatureAgreed] = useState(false);
 
   const currentTraveler = travelers[currentTravelerIndex];
+
+  // Purpose options
+  const mainPurposeOptions = [
+    { value: 'tourism', label: 'Tourism' },
+    { value: 'business', label: 'Business' },
+    { value: 'family', label: 'Family Visit' },
+    { value: 'education', label: 'Education' },
+    { value: 'medical', label: 'Medical Treatment' },
+    { value: 'transit', label: 'Transit' },
+    { value: 'other', label: 'Other' },
+  ];
+
+  const subPurposeOptions: { [key: string]: { value: string; label: string }[] } = {
+    tourism: [
+      { value: 'leisure', label: 'Leisure/Vacation' },
+      { value: 'sightseeing', label: 'Sightseeing' },
+      { value: 'adventure', label: 'Adventure Sports' },
+      { value: 'cultural', label: 'Cultural Experience' },
+      { value: 'beach', label: 'Beach Holiday' },
+    ],
+    business: [
+      { value: 'meeting', label: 'Business Meeting' },
+      { value: 'conference', label: 'Conference/Seminar' },
+      { value: 'negotiation', label: 'Business Negotiation' },
+      { value: 'exhibition', label: 'Trade Exhibition' },
+      { value: 'training', label: 'Training/Workshop' },
+    ],
+    family: [
+      { value: 'visit', label: 'Visit Family' },
+      { value: 'wedding', label: 'Wedding/Ceremony' },
+      { value: 'birth', label: 'Birth of Child' },
+      { value: 'emergency', label: 'Family Emergency' },
+    ],
+    education: [
+      { value: 'study', label: 'Study Program' },
+      { value: 'research', label: 'Research' },
+      { value: 'exchange', label: 'Student Exchange' },
+      { value: 'training', label: 'Training Course' },
+    ],
+    medical: [
+      { value: 'treatment', label: 'Medical Treatment' },
+      { value: 'surgery', label: 'Surgery' },
+      { value: 'checkup', label: 'Medical Checkup' },
+      { value: 'rehabilitation', label: 'Rehabilitation' },
+    ],
+    transit: [
+      { value: 'connecting', label: 'Connecting Flight' },
+      { value: 'layover', label: 'Layover' },
+    ],
+    other: [
+      { value: 'other', label: 'Other Purpose' },
+    ],
+  };
 
   const visaOptions = [
     {
@@ -49,15 +105,28 @@ export function VisaApplication({ travelers, onUpdate, onNavigate, selectedCount
   const handleComplete = () => {
     const updatedTravelers = [...travelers];
     updatedTravelers[currentTravelerIndex].entryRequirements.visa = true;
+    updatedTravelers[currentTravelerIndex].visaDetails = {
+      visaType,
+      mainPurpose,
+      subPurpose,
+    };
     onUpdate(updatedTravelers);
 
     if (currentTravelerIndex < travelers.length - 1) {
       setCurrentTravelerIndex(currentTravelerIndex + 1);
       setStep(1);
+      setVisaType(updatedTravelers[currentTravelerIndex + 1]?.visaDetails?.visaType || 'tourist-30');
+      setMainPurpose(updatedTravelers[currentTravelerIndex + 1]?.visaDetails?.mainPurpose || '');
+      setSubPurpose(updatedTravelers[currentTravelerIndex + 1]?.visaDetails?.subPurpose || '');
       setSignatureAgreed(false);
     } else {
       onNavigate('customs-declaration');
     }
+  };
+
+  const handleMainPurposeChange = (value: string) => {
+    setMainPurpose(value);
+    setSubPurpose(''); // Reset sub purpose when main purpose changes
   };
 
   return (
@@ -73,7 +142,23 @@ export function VisaApplication({ travelers, onUpdate, onNavigate, selectedCount
             <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
             Back
           </Button>
-          <h1 className="text-white mb-0">Entry Visa Application</h1>
+          <h1 className="text-white mb-0 d-flex align-items-center gap-2">
+            <img 
+              src={getCountryFlagUrl(selectedCountry, 'w40')}
+              alt={`${selectedCountry} flag`}
+              style={{ 
+                width: '32px', 
+                height: '24px', 
+                objectFit: 'cover',
+                borderRadius: '4px',
+                border: '1px solid rgba(255, 255, 255, 0.3)'
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+            Entry Visa Application
+          </h1>
           <p className="text-white mt-2 mb-0">Step {step} of 2</p>
         </Container>
       </div>
@@ -120,6 +205,54 @@ export function VisaApplication({ travelers, onUpdate, onNavigate, selectedCount
                 ))}
               </RadioGroup>
 
+              {/* Main Purpose of Visiting */}
+              <div className="mt-4 mb-4">
+                <Label className="mb-3 d-block">Main Purpose of Visiting</Label>
+                <select
+                  value={mainPurpose}
+                  onChange={(e) => handleMainPurposeChange(e.target.value)}
+                  className="form-select"
+                  style={{
+                    padding: '0.75rem',
+                    borderRadius: '6px',
+                    border: '1px solid #dee2e6',
+                    fontSize: '1rem',
+                  }}
+                >
+                  <option value="">Select Main Purpose</option>
+                  {mainPurposeOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Sub Purpose of Visiting */}
+              {mainPurpose && (
+                <div className="mb-4">
+                  <Label className="mb-3 d-block">Sub Purpose of Visiting</Label>
+                  <select
+                    value={subPurpose}
+                    onChange={(e) => setSubPurpose(e.target.value)}
+                    className="form-select"
+                    style={{
+                      padding: '0.75rem',
+                      borderRadius: '6px',
+                      border: '1px solid #dee2e6',
+                      fontSize: '1rem',
+                    }}
+                  >
+                    <option value="">Select Sub Purpose</option>
+                    {subPurposeOptions[mainPurpose]?.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
               <div className="mt-4 bg-info bg-opacity-10 border border-info rounded p-4">
                 <h4 className="mb-3">Visa Fee Summary</h4>
                 <div className="d-flex align-items-center justify-content-between mb-2">
@@ -133,7 +266,10 @@ export function VisaApplication({ travelers, onUpdate, onNavigate, selectedCount
               </div>
 
               <div className="mt-4 d-flex justify-content-end">
-                <Button onClick={() => setStep(2)}>
+                <Button 
+                  onClick={() => setStep(2)} 
+                  disabled={!mainPurpose || !subPurpose}
+                >
                   Continue
                   <ArrowRight style={{ width: '16px', height: '16px', marginLeft: '8px' }} />
                 </Button>
