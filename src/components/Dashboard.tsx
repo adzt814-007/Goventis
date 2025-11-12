@@ -182,7 +182,7 @@ export function Dashboard({ user, travelers, onNavigate, onLogout, currentPage, 
                 </div>
                 <div className="flex-grow-1">
                   <h3 className="h4 mb-2 fw-bold">Ready to Start Your Journey?</h3>
-                  <p className="text-muted mb-4" style={{ fontSize: 'clamp(15px, 2vw, 1.25rem)', lineHeight: '1.6' }}>
+                  <p className="text-muted mb-4" style={{ fontSize: 'clamp(15px, 2vw, 1.15rem)', lineHeight: '1.6' }}>
                     Begin by uploading your documents and completing the pre-arrival process. It takes only 10-15 minutes per traveler to get everything ready for your {selectedCountry} adventure.
                   </p>
                   <Button
@@ -381,7 +381,7 @@ export function Dashboard({ user, travelers, onNavigate, onLogout, currentPage, 
                       </Badge>
                     )}
                   </div>
-                  <p className="text-muted mb-4" style={{ fontSize: 'clamp(15px, 2vw, 1.25rem)', lineHeight: '1.6' }}>
+                  <p className="text-muted mb-4" style={{ fontSize: 'clamp(15px, 2vw, 1.15rem)', lineHeight: '1.6' }}>
                     Get your entry certificate with QR code for quick processing at border control. Download and print before your departure.
                   </p>
                   <Button
