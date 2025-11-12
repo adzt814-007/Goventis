@@ -549,9 +549,7 @@ export function Profile({ user, onNavigate, onLogout, currentPage, selectedCount
             variant="outline"
             className="flex-grow-1"
             onClick={() => {
-              if (confirm('Are you sure you want to log out?')) {
-                onNavigate('welcome');
-              }
+              onLogout();
             }}
           >
             Log Out

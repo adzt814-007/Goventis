@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { Input } from './ui/input';
@@ -6,9 +6,9 @@ import { Label } from './ui/label';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Badge } from './ui/badge';
 import { Container, Row, Col } from 'react-bootstrap';
-import { ArrowLeft, ArrowRight, CreditCard, Building2, Wallet, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CreditCard, Building2, Wallet, CheckCircle2, ChevronDown } from 'lucide-react';
 import type { Traveler } from '../App';
-import { getCountryFlagUrl } from '../App';
+import { COUNTRIES, getCountryFlagUrl } from '../App';
 
 type PaymentProps = {
   travelers: Traveler[];
@@ -27,6 +27,8 @@ export function Payment({ travelers, user, onNavigate, selectedCountry = 'Bali' 
     postcode: '',
     country: '',
   });
+  const [showBillingCountryDropdown, setShowBillingCountryDropdown] = useState(false);
+  const billingCountryDropdownRef = useRef<HTMLDivElement>(null);
 
   // Calculate costs
   const visaCost = travelers.reduce((sum, t) => sum + 35, 0); // $35 per traveler (assuming tourist-30)
@@ -39,6 +41,28 @@ export function Payment({ travelers, user, onNavigate, selectedCountry = 'Bali' 
   const handleComplete = () => {
     // Payment successful - navigate to success screen
     onNavigate('payment-success');
+  };
+
+  // Close billing country dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (billingCountryDropdownRef.current && !billingCountryDropdownRef.current.contains(event.target as Node)) {
+        setShowBillingCountryDropdown(false);
+      }
+    };
+
+    if (showBillingCountryDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showBillingCountryDropdown]);
+
+  const handleBillingCountrySelect = (country: string) => {
+    setBillingAddress({ ...billingAddress, country });
+    setShowBillingCountryDropdown(false);
   };
 
   return (
@@ -216,13 +240,127 @@ export function Payment({ travelers, user, onNavigate, selectedCountry = 'Bali' 
                   </Col>
                   <Col sm={6}>
                     <Label htmlFor="country">Country</Label>
-                    <Input
-                      id="country"
-                      value={billingAddress.country}
-                      onChange={(e) => setBillingAddress({ ...billingAddress, country: e.target.value })}
-                      placeholder="United States"
-                      className="mt-2"
-                    />
+                    <div className="position-relative mt-2" ref={billingCountryDropdownRef}>
+                      <button
+                        type="button"
+                        onClick={() => setShowBillingCountryDropdown(!showBillingCountryDropdown)}
+                        className="d-flex align-items-center gap-2 border rounded w-100"
+                        style={{
+                          borderColor: 'var(--border)',
+                          borderRadius: '6px',
+                          padding: '0.5rem 0.75rem',
+                          fontSize: '0.875rem',
+                          cursor: 'pointer',
+                          backgroundColor: '#fff',
+                          color: 'var(--foreground)',
+                          transition: 'all 0.2s ease',
+                          textAlign: 'left'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(13, 148, 136, 0.05)';
+                          e.currentTarget.style.borderColor = 'var(--primary-hover)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#fff';
+                          e.currentTarget.style.borderColor = 'var(--border)';
+                        }}
+                      >
+                        {billingAddress.country ? (
+                          <>
+                            <img 
+                              src={getCountryFlagUrl(billingAddress.country, 'w40')}
+                              alt={`${billingAddress.country} flag`}
+                              style={{ 
+                                width: '24px', 
+                                height: '18px', 
+                                objectFit: 'cover',
+                                borderRadius: '2px',
+                                border: '1px solid rgba(0, 0, 0, 0.1)',
+                                flexShrink: 0
+                              }}
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                            <span className="flex-grow-1 text-start">{billingAddress.country}</span>
+                          </>
+                        ) : (
+                          <span className="flex-grow-1 text-start text-muted">Select Country</span>
+                        )}
+                        <ChevronDown 
+                          style={{ 
+                            width: '16px', 
+                            height: '16px',
+                            transform: showBillingCountryDropdown ? 'rotate(180deg)' : 'rotate(0deg)',
+                            transition: 'transform 0.2s ease',
+                            flexShrink: 0
+                          }} 
+                        />
+                      </button>
+                      
+                      {showBillingCountryDropdown && (
+                        <div
+                          className="position-absolute top-100 start-0 mt-1 bg-white border rounded shadow-lg"
+                          style={{
+                            minWidth: '100%',
+                            maxHeight: '300px',
+                            overflowY: 'auto',
+                            zIndex: 1000,
+                            borderColor: 'var(--border)',
+                            borderRadius: '8px',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                          }}
+                        >
+                          {COUNTRIES.map((country) => (
+                            <button
+                              key={country}
+                              type="button"
+                              onClick={() => handleBillingCountrySelect(country)}
+                              className="w-100 d-flex align-items-center gap-2 border-0 text-start p-2"
+                              style={{
+                                cursor: 'pointer',
+                                backgroundColor: country === billingAddress.country ? 'var(--primary)' : 'transparent',
+                                color: country === billingAddress.country ? 'white' : 'var(--foreground)',
+                                fontSize: '0.875rem',
+                                transition: 'all 0.2s ease'
+                              }}
+                              onMouseEnter={(e) => {
+                                if (country !== billingAddress.country) {
+                                  e.currentTarget.style.backgroundColor = 'rgba(13, 148, 136, 0.05)';
+                                }
+                              }}
+                              onMouseLeave={(e) => {
+                                if (country !== billingAddress.country) {
+                                  e.currentTarget.style.backgroundColor = 'transparent';
+                                } else {
+                                  e.currentTarget.style.backgroundColor = 'var(--primary)';
+                                }
+                              }}
+                            >
+                              <img 
+                                src={getCountryFlagUrl(country, 'w40')}
+                                alt={`${country} flag`}
+                                style={{ 
+                                  width: '24px', 
+                                  height: '18px', 
+                                  objectFit: 'cover',
+                                  borderRadius: '2px',
+                                  border: '1px solid rgba(0, 0, 0, 0.1)',
+                                  flexShrink: 0
+                                }}
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                }}
+                              />
+                              <span>{country}</span>
+                              {country === billingAddress.country && (
+                                <span className="ms-auto" style={{ color: 'white' }}>✓</span>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </Col>
                 </Row>
               </div>

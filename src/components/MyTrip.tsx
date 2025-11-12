@@ -180,8 +180,8 @@ export function MyTrip({ travelers, onNavigate, user, onLogout, currentPage, sel
                       <div className="small">
                         <p className="text-dark mb-2">{mainTraveler.accommodationDetails.address1} {mainTraveler.accommodationDetails.address2}</p>
                         <div className="d-flex gap-2">
-                          <Badge variant="outline">{mainTraveler.accommodationDetails.residenceType}</Badge>
-                          <Badge variant="outline">{mainTraveler.accommodationDetails.postalCode}</Badge>
+                          <Badge variant="outline" style={{ borderColor: 'var(--primary)', color: 'var(--primary)',fontSize: '15px' }}>{mainTraveler.accommodationDetails.residenceType}</Badge>
+                          <Badge variant="outline" style={{ borderColor: 'var(--primary)', color: 'var(--primary)',fontSize: '15px' }}>{mainTraveler.accommodationDetails.postalCode}</Badge>
                         </div>
                       </div>
                     </div>

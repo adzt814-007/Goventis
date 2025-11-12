@@ -23,6 +23,14 @@ export function InformationConfirmation({ travelers, onUpdate, onNavigate, selec
   const [step, setStep] = useState(5); // Steps 5-9
   const [showPleaseNote, setShowPleaseNote] = useState(false);
   const [showThankYou, setShowThankYou] = useState(false);
+  const [showNationalityDropdown, setShowNationalityDropdown] = useState(false);
+  const nationalityDropdownRef = useRef<HTMLDivElement>(null);
+  const [showResidenceTypeDropdown, setShowResidenceTypeDropdown] = useState(false);
+  const residenceTypeDropdownRef = useRef<HTMLDivElement>(null);
+  const [showOccupationDropdown, setShowOccupationDropdown] = useState(false);
+  const occupationDropdownRef = useRef<HTMLDivElement>(null);
+  const [showCountryOfResidenceDropdown, setShowCountryOfResidenceDropdown] = useState(false);
+  const countryOfResidenceDropdownRef = useRef<HTMLDivElement>(null);
 
   const currentTraveler = travelers[currentTravelerIndex];
 
@@ -75,6 +83,98 @@ export function InformationConfirmation({ travelers, onUpdate, onNavigate, selec
   };
 
   const progress = ((step - 4) / 5) * 100;
+
+  // Close nationality dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (nationalityDropdownRef.current && !nationalityDropdownRef.current.contains(event.target as Node)) {
+        setShowNationalityDropdown(false);
+      }
+    };
+
+    if (showNationalityDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showNationalityDropdown]);
+
+  const handleNationalitySelect = (nationality: string) => {
+    handleInputChange('personalDetails', 'nationality', nationality);
+    setShowNationalityDropdown(false);
+  };
+
+  // Close residence type dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (residenceTypeDropdownRef.current && !residenceTypeDropdownRef.current.contains(event.target as Node)) {
+        setShowResidenceTypeDropdown(false);
+      }
+    };
+
+    if (showResidenceTypeDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showResidenceTypeDropdown]);
+
+  const handleResidenceTypeSelect = (residenceType: string) => {
+    handleInputChange('accommodationDetails', 'residenceType', residenceType);
+    setShowResidenceTypeDropdown(false);
+  };
+
+  const RESIDENCE_TYPES = ['Hotel', 'Villa', 'Resort', 'Apartment', 'Guesthouse', 'Hostel', 'Other'];
+
+  // Close occupation dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (occupationDropdownRef.current && !occupationDropdownRef.current.contains(event.target as Node)) {
+        setShowOccupationDropdown(false);
+      }
+    };
+
+    if (showOccupationDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showOccupationDropdown]);
+
+  const handleOccupationSelect = (occupation: string) => {
+    handleInputChange('contactDetails', 'occupation', occupation);
+    setShowOccupationDropdown(false);
+  };
+
+  const OCCUPATIONS = ['Student', 'Employee', 'Self-Employed', 'Business Owner', 'Retired', 'Unemployed', 'Other'];
+
+  // Close country of residence dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (countryOfResidenceDropdownRef.current && !countryOfResidenceDropdownRef.current.contains(event.target as Node)) {
+        setShowCountryOfResidenceDropdown(false);
+      }
+    };
+
+    if (showCountryOfResidenceDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showCountryOfResidenceDropdown]);
+
+  const handleCountryOfResidenceSelect = (country: string) => {
+    handleInputChange('contactDetails', 'countryOfResidence', country);
+    setShowCountryOfResidenceDropdown(false);
+  };
 
   // Show Please Note screen
   if (showPleaseNote) {
@@ -500,7 +600,7 @@ export function InformationConfirmation({ travelers, onUpdate, onNavigate, selec
             <CardContent className="pt-4">
               <div className="d-flex align-items-center justify-content-between mb-4">
                 <h3 className="h5 mb-0">Personal Details</h3>
-                <Badge variant="outline">Auto-filled from Passport</Badge>
+                <Badge variant="outline" style={{color:"#0d9488 "}}>Auto-filled from Passport</Badge>
               </div>
 
               <div>
@@ -592,12 +692,127 @@ export function InformationConfirmation({ travelers, onUpdate, onNavigate, selec
                 <Row className="g-3 mb-3">
                   <Col sm={6}>
                     <Label htmlFor="nationality">Nationality</Label>
-                    <Input
-                      id="nationality"
-                      value={currentTraveler?.personalDetails.nationality || ''}
-                      onChange={(e) => handleInputChange('personalDetails', 'nationality', e.target.value)}
-                      className="mt-2"
-                    />
+                    <div className="position-relative mt-2" ref={nationalityDropdownRef}>
+                      <button
+                        type="button"
+                        onClick={() => setShowNationalityDropdown(!showNationalityDropdown)}
+                        className="d-flex align-items-center gap-2 border rounded w-100"
+                        style={{
+                          borderColor: 'var(--border)',
+                          borderRadius: '6px',
+                          padding: '0.5rem 0.75rem',
+                          fontSize: '0.875rem',
+                          cursor: 'pointer',
+                          backgroundColor: '#fff',
+                          color: 'var(--foreground)',
+                          transition: 'all 0.2s ease',
+                          textAlign: 'left'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(13, 148, 136, 0.05)';
+                          e.currentTarget.style.borderColor = 'var(--primary-hover)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#fff';
+                          e.currentTarget.style.borderColor = 'var(--border)';
+                        }}
+                      >
+                        {currentTraveler?.personalDetails.nationality ? (
+                          <>
+                            <img 
+                              src={getCountryFlagUrl(currentTraveler.personalDetails.nationality, 'w40')}
+                              alt={`${currentTraveler.personalDetails.nationality} flag`}
+                              style={{ 
+                                width: '24px', 
+                                height: '18px', 
+                                objectFit: 'cover',
+                                borderRadius: '2px',
+                                border: '1px solid rgba(0, 0, 0, 0.1)',
+                                flexShrink: 0
+                              }}
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                            <span className="flex-grow-1 text-start">{currentTraveler.personalDetails.nationality}</span>
+                          </>
+                        ) : (
+                          <span className="flex-grow-1 text-start text-muted">Select Nationality</span>
+                        )}
+                        <ChevronDown 
+                          style={{ 
+                            width: '16px', 
+                            height: '16px',
+                            transform: showNationalityDropdown ? 'rotate(180deg)' : 'rotate(0deg)',
+                            transition: 'transform 0.2s ease',
+                            flexShrink: 0
+                          }} 
+                        />
+                      </button>
+                      
+                      {showNationalityDropdown && (
+                        <div
+                          className="position-absolute top-100 start-0 mt-1 bg-white border rounded shadow-lg"
+                          style={{
+                            minWidth: '100%',
+                            maxHeight: '300px',
+                            overflowY: 'auto',
+                            zIndex: 1000,
+                            borderColor: 'var(--border)',
+                            borderRadius: '8px',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                          }}
+                        >
+                          {COUNTRIES.map((country) => (
+                            <button
+                              key={country}
+                              type="button"
+                              onClick={() => handleNationalitySelect(country)}
+                              className="w-100 d-flex align-items-center gap-2 border-0 text-start p-2"
+                              style={{
+                                cursor: 'pointer',
+                                backgroundColor: country === currentTraveler?.personalDetails.nationality ? 'var(--primary)' : 'transparent',
+                                color: country === currentTraveler?.personalDetails.nationality ? 'white' : 'var(--foreground)',
+                                fontSize: '0.875rem',
+                                transition: 'all 0.2s ease'
+                              }}
+                              onMouseEnter={(e) => {
+                                if (country !== currentTraveler?.personalDetails.nationality) {
+                                  e.currentTarget.style.backgroundColor = 'rgba(13, 148, 136, 0.05)';
+                                }
+                              }}
+                              onMouseLeave={(e) => {
+                                if (country !== currentTraveler?.personalDetails.nationality) {
+                                  e.currentTarget.style.backgroundColor = 'transparent';
+                                } else {
+                                  e.currentTarget.style.backgroundColor = 'var(--primary)';
+                                }
+                              }}
+                            >
+                              <img 
+                                src={getCountryFlagUrl(country, 'w40')}
+                                alt={`${country} flag`}
+                                style={{ 
+                                  width: '24px', 
+                                  height: '18px', 
+                                  objectFit: 'cover',
+                                  borderRadius: '2px',
+                                  border: '1px solid rgba(0, 0, 0, 0.1)',
+                                  flexShrink: 0
+                                }}
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                }}
+                              />
+                              <span>{country}</span>
+                              {country === currentTraveler?.personalDetails.nationality && (
+                                <span className="ms-auto" style={{ color: 'white' }}>✓</span>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </Col>
                   <Col sm={6}>
                     <Label htmlFor="dateOfExpiry">Date of Expiry</Label>
@@ -800,29 +1015,94 @@ export function InformationConfirmation({ travelers, onUpdate, onNavigate, selec
               <div>
                 <div className="mb-3">
                   <Label htmlFor="residenceType">Residence Type</Label>
-                  <div className="position-relative mt-2">
-                    <select
-                      id="residenceType"
-                      value={currentTraveler?.accommodationDetails.residenceType || ''}
-                      onChange={(e) => handleInputChange('accommodationDetails', 'residenceType', e.target.value)}
-                      className="form-select"
+                  <div className="position-relative mt-2" ref={residenceTypeDropdownRef}>
+                    <button
+                      type="button"
+                      onClick={() => setShowResidenceTypeDropdown(!showResidenceTypeDropdown)}
+                      className="d-flex align-items-center gap-2 border rounded w-100"
                       style={{
-                        padding: '0.5rem 0.75rem',
+                        borderColor: 'var(--border)',
                         borderRadius: '6px',
-                        border: '1px solid var(--border)',
+                        padding: '0.5rem 0.75rem',
                         fontSize: '0.875rem',
-                        width: '100%'
+                        cursor: 'pointer',
+                        backgroundColor: '#fff',
+                        color: 'var(--foreground)',
+                        transition: 'all 0.2s ease',
+                        textAlign: 'left'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(13, 148, 136, 0.05)';
+                        e.currentTarget.style.borderColor = 'var(--primary-hover)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = '#fff';
+                        e.currentTarget.style.borderColor = 'var(--border)';
                       }}
                     >
-                      <option value="">Select Residence Type</option>
-                      <option value="Hotel">Hotel</option>
-                      <option value="Villa">Villa</option>
-                      <option value="Resort">Resort</option>
-                      <option value="Apartment">Apartment</option>
-                      <option value="Guesthouse">Guesthouse</option>
-                      <option value="Hostel">Hostel</option>
-                      <option value="Other">Other</option>
-                    </select>
+                      {currentTraveler?.accommodationDetails.residenceType ? (
+                        <span className="flex-grow-1 text-start">{currentTraveler.accommodationDetails.residenceType}</span>
+                      ) : (
+                        <span className="flex-grow-1 text-start text-muted">Select Residence Type</span>
+                      )}
+                      <ChevronDown 
+                        style={{ 
+                          width: '16px', 
+                          height: '16px',
+                          transform: showResidenceTypeDropdown ? 'rotate(180deg)' : 'rotate(0deg)',
+                          transition: 'transform 0.2s ease',
+                          flexShrink: 0
+                        }} 
+                      />
+                    </button>
+                    
+                    {showResidenceTypeDropdown && (
+                      <div
+                        className="position-absolute top-100 start-0 mt-1 bg-white border rounded shadow-lg"
+                        style={{
+                          minWidth: '100%',
+                          maxHeight: '300px',
+                          overflowY: 'auto',
+                          zIndex: 1000,
+                          borderColor: 'var(--border)',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                        }}
+                      >
+                        {RESIDENCE_TYPES.map((type) => (
+                          <button
+                            key={type}
+                            type="button"
+                            onClick={() => handleResidenceTypeSelect(type)}
+                            className="w-100 d-flex align-items-center gap-2 border-0 text-start p-2"
+                            style={{
+                              cursor: 'pointer',
+                              backgroundColor: type === currentTraveler?.accommodationDetails.residenceType ? 'var(--primary)' : 'transparent',
+                              color: type === currentTraveler?.accommodationDetails.residenceType ? 'white' : 'var(--foreground)',
+                              fontSize: '0.875rem',
+                              transition: 'all 0.2s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                              if (type !== currentTraveler?.accommodationDetails.residenceType) {
+                                e.currentTarget.style.backgroundColor = 'rgba(13, 148, 136, 0.05)';
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (type !== currentTraveler?.accommodationDetails.residenceType) {
+                                e.currentTarget.style.backgroundColor = 'transparent';
+                              } else {
+                                e.currentTarget.style.backgroundColor = 'var(--primary)';
+                              }
+                            }}
+                          >
+                            <span>{type}</span>
+                            {type === currentTraveler?.accommodationDetails.residenceType && (
+                              <span className="ms-auto" style={{ color: 'white' }}>✓</span>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -906,25 +1186,126 @@ export function InformationConfirmation({ travelers, onUpdate, onNavigate, selec
 
                 <div className="mb-3">
                   <Label htmlFor="countryOfResidence">Country of Residence</Label>
-                  <div className="position-relative mt-2">
-                    <select
-                      id="countryOfResidence"
-                      value={currentTraveler?.contactDetails.countryOfResidence || ''}
-                      onChange={(e) => handleInputChange('contactDetails', 'countryOfResidence', e.target.value)}
-                      className="form-select"
+                  <div className="position-relative mt-2" ref={countryOfResidenceDropdownRef}>
+                    <button
+                      type="button"
+                      onClick={() => setShowCountryOfResidenceDropdown(!showCountryOfResidenceDropdown)}
+                      className="d-flex align-items-center gap-2 border rounded w-100"
                       style={{
-                        padding: '0.5rem 0.75rem',
+                        borderColor: 'var(--border)',
                         borderRadius: '6px',
-                        border: '1px solid var(--border)',
+                        padding: '0.5rem 0.75rem',
                         fontSize: '0.875rem',
-                        width: '100%'
+                        cursor: 'pointer',
+                        backgroundColor: '#fff',
+                        color: 'var(--foreground)',
+                        transition: 'all 0.2s ease',
+                        textAlign: 'left'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(13, 148, 136, 0.05)';
+                        e.currentTarget.style.borderColor = 'var(--primary-hover)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = '#fff';
+                        e.currentTarget.style.borderColor = 'var(--border)';
                       }}
                     >
-                      <option value="">Select Country</option>
+                      {currentTraveler?.contactDetails.countryOfResidence ? (
+                        <>
+                          <img 
+                            src={getCountryFlagUrl(currentTraveler.contactDetails.countryOfResidence, 'w40')}
+                            alt={`${currentTraveler.contactDetails.countryOfResidence} flag`}
+                            style={{ 
+                              width: '24px', 
+                              height: '18px', 
+                              objectFit: 'cover',
+                              borderRadius: '2px',
+                              border: '1px solid rgba(0, 0, 0, 0.1)',
+                              flexShrink: 0
+                            }}
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                            }}
+                          />
+                          <span className="flex-grow-1 text-start">{currentTraveler.contactDetails.countryOfResidence}</span>
+                        </>
+                      ) : (
+                        <span className="flex-grow-1 text-start text-muted">Select Country</span>
+                      )}
+                      <ChevronDown 
+                        style={{ 
+                          width: '16px', 
+                          height: '16px',
+                          transform: showCountryOfResidenceDropdown ? 'rotate(180deg)' : 'rotate(0deg)',
+                          transition: 'transform 0.2s ease',
+                          flexShrink: 0
+                        }} 
+                      />
+                    </button>
+                    
+                    {showCountryOfResidenceDropdown && (
+                      <div
+                        className="position-absolute top-100 start-0 mt-1 bg-white border rounded shadow-lg"
+                        style={{
+                          minWidth: '100%',
+                          maxHeight: '300px',
+                          overflowY: 'auto',
+                          zIndex: 1000,
+                          borderColor: 'var(--border)',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                        }}
+                      >
                       {COUNTRIES.map((country) => (
-                        <option key={country} value={country}>{country}</option>
-                      ))}
-                    </select>
+                          <button
+                            key={country}
+                            type="button"
+                            onClick={() => handleCountryOfResidenceSelect(country)}
+                            className="w-100 d-flex align-items-center gap-2 border-0 text-start p-2"
+                            style={{
+                              cursor: 'pointer',
+                              backgroundColor: country === currentTraveler?.contactDetails.countryOfResidence ? 'var(--primary)' : 'transparent',
+                              color: country === currentTraveler?.contactDetails.countryOfResidence ? 'white' : 'var(--foreground)',
+                              fontSize: '0.875rem',
+                              transition: 'all 0.2s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                              if (country !== currentTraveler?.contactDetails.countryOfResidence) {
+                                e.currentTarget.style.backgroundColor = 'rgba(13, 148, 136, 0.05)';
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (country !== currentTraveler?.contactDetails.countryOfResidence) {
+                                e.currentTarget.style.backgroundColor = 'transparent';
+                              } else {
+                                e.currentTarget.style.backgroundColor = 'var(--primary)';
+                              }
+                            }}
+                          >
+                            <img 
+                              src={getCountryFlagUrl(country, 'w40')}
+                              alt={`${country} flag`}
+                              style={{ 
+                                width: '24px', 
+                                height: '18px', 
+                                objectFit: 'cover',
+                                borderRadius: '2px',
+                                border: '1px solid rgba(0, 0, 0, 0.1)',
+                                flexShrink: 0
+                              }}
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                            <span>{country}</span>
+                            {country === currentTraveler?.contactDetails.countryOfResidence && (
+                              <span className="ms-auto" style={{ color: 'white' }}>✓</span>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -985,29 +1366,94 @@ export function InformationConfirmation({ travelers, onUpdate, onNavigate, selec
                   </Col>
                   <Col sm={6}>
                     <Label htmlFor="occupation">Occupation</Label>
-                    <div className="position-relative mt-2">
-                      <select
-                        id="occupation"
-                        value={currentTraveler?.contactDetails.occupation || ''}
-                        onChange={(e) => handleInputChange('contactDetails', 'occupation', e.target.value)}
-                        className="form-select"
+                    <div className="position-relative mt-2" ref={occupationDropdownRef}>
+                      <button
+                        type="button"
+                        onClick={() => setShowOccupationDropdown(!showOccupationDropdown)}
+                        className="d-flex align-items-center gap-2 border rounded w-100"
                         style={{
-                          padding: '0.5rem 0.75rem',
+                          borderColor: 'var(--border)',
                           borderRadius: '6px',
-                          border: '1px solid var(--border)',
+                          padding: '0.5rem 0.75rem',
                           fontSize: '0.875rem',
-                          width: '100%'
+                          cursor: 'pointer',
+                          backgroundColor: '#fff',
+                          color: 'var(--foreground)',
+                          transition: 'all 0.2s ease',
+                          textAlign: 'left'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(13, 148, 136, 0.05)';
+                          e.currentTarget.style.borderColor = 'var(--primary-hover)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#fff';
+                          e.currentTarget.style.borderColor = 'var(--border)';
                         }}
                       >
-                        <option value="">Select Occupation</option>
-                        <option value="Student">Student</option>
-                        <option value="Employee">Employee</option>
-                        <option value="Self-Employed">Self-Employed</option>
-                        <option value="Business Owner">Business Owner</option>
-                        <option value="Retired">Retired</option>
-                        <option value="Unemployed">Unemployed</option>
-                        <option value="Other">Other</option>
-                      </select>
+                        {currentTraveler?.contactDetails.occupation ? (
+                          <span className="flex-grow-1 text-start">{currentTraveler.contactDetails.occupation}</span>
+                        ) : (
+                          <span className="flex-grow-1 text-start text-muted">Select Occupation</span>
+                        )}
+                        <ChevronDown 
+                          style={{ 
+                            width: '16px', 
+                            height: '16px',
+                            transform: showOccupationDropdown ? 'rotate(180deg)' : 'rotate(0deg)',
+                            transition: 'transform 0.2s ease',
+                            flexShrink: 0
+                          }} 
+                        />
+                      </button>
+                      
+                      {showOccupationDropdown && (
+                        <div
+                          className="position-absolute top-100 start-0 mt-1 bg-white border rounded shadow-lg"
+                          style={{
+                            minWidth: '100%',
+                            maxHeight: '300px',
+                            overflowY: 'auto',
+                            zIndex: 1000,
+                            borderColor: 'var(--border)',
+                            borderRadius: '8px',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                          }}
+                        >
+                          {OCCUPATIONS.map((occupation) => (
+                            <button
+                              key={occupation}
+                              type="button"
+                              onClick={() => handleOccupationSelect(occupation)}
+                              className="w-100 d-flex align-items-center gap-2 border-0 text-start p-2"
+                              style={{
+                                cursor: 'pointer',
+                                backgroundColor: occupation === currentTraveler?.contactDetails.occupation ? 'var(--primary)' : 'transparent',
+                                color: occupation === currentTraveler?.contactDetails.occupation ? 'white' : 'var(--foreground)',
+                                fontSize: '0.875rem',
+                                transition: 'all 0.2s ease'
+                              }}
+                              onMouseEnter={(e) => {
+                                if (occupation !== currentTraveler?.contactDetails.occupation) {
+                                  e.currentTarget.style.backgroundColor = 'rgba(13, 148, 136, 0.05)';
+                                }
+                              }}
+                              onMouseLeave={(e) => {
+                                if (occupation !== currentTraveler?.contactDetails.occupation) {
+                                  e.currentTarget.style.backgroundColor = 'transparent';
+                                } else {
+                                  e.currentTarget.style.backgroundColor = 'var(--primary)';
+                                }
+                              }}
+                            >
+                              <span>{occupation}</span>
+                              {occupation === currentTraveler?.contactDetails.occupation && (
+                                <span className="ms-auto" style={{ color: 'white' }}>✓</span>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </Col>
                 </Row>

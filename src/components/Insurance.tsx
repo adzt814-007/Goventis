@@ -80,7 +80,7 @@ export function Insurance({
           <CardContent className="pt-4">
             <div className="d-flex align-items-center gap-3 mb-4">
               <div
-                className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center"
+                className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center Shiled_Bg_Icon"
                 style={{ width: "64px", height: "64px" }}
               >
                 <Shield
@@ -88,8 +88,8 @@ export function Insurance({
                 />
               </div>
               <div>
-                <h2 className="mb-0">Mandatory Travel Insurance</h2>
-                <p className="text-muted mb-0">
+                <h2 className="mb-0" style={{fontSize:"clamp(19px, 2vw, 1.45rem)"}}>Mandatory Travel Insurance</h2>
+                <p className="text-muted mb-0" style={{fontSize:"clamp(15px, 2vw, 1.15rem)"}}>
                   All travelers must have valid insurance coverage
                 </p>
               </div>

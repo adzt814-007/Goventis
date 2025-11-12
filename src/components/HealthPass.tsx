@@ -141,7 +141,7 @@ export function HealthPass({ travelers, onUpdate, onNavigate, selectedCountry = 
                   <Heart style={{ width: '24px', height: '24px', color: '#dc3545' }} />
                 </div>
                 <div>
-                  <h3 className="mb-0">Health Symptom Screening</h3>
+                  <h3 className="mb-0" style={{fontSize:"clamp(19px, 2vw, 1.45rem)"}}>Health Symptom Screening</h3>
                   <p className="text-muted small mb-0">Current health status assessment</p>
                 </div>
               </div>

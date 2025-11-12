@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { Label } from './ui/label';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Badge } from './ui/badge';
 import { Container } from 'react-bootstrap';
-import { ArrowLeft, ArrowRight, FileText, CreditCard } from 'lucide-react';
+import { ArrowLeft, ArrowRight, FileText, CreditCard, ChevronDown } from 'lucide-react';
 import type { Traveler } from '../App';
 import { getCountryFlagUrl } from '../App';
 
@@ -23,6 +23,10 @@ export function VisaApplication({ travelers, onUpdate, onNavigate, selectedCount
   const [mainPurpose, setMainPurpose] = useState<string>(travelers[0]?.visaDetails?.mainPurpose || '');
   const [subPurpose, setSubPurpose] = useState<string>(travelers[0]?.visaDetails?.subPurpose || '');
   const [signatureAgreed, setSignatureAgreed] = useState(false);
+  const [showMainPurposeDropdown, setShowMainPurposeDropdown] = useState(false);
+  const mainPurposeDropdownRef = useRef<HTMLDivElement>(null);
+  const [showSubPurposeDropdown, setShowSubPurposeDropdown] = useState(false);
+  const subPurposeDropdownRef = useRef<HTMLDivElement>(null);
 
   const currentTraveler = travelers[currentTravelerIndex];
 
@@ -129,6 +133,50 @@ export function VisaApplication({ travelers, onUpdate, onNavigate, selectedCount
     setSubPurpose(''); // Reset sub purpose when main purpose changes
   };
 
+  // Close main purpose dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (mainPurposeDropdownRef.current && !mainPurposeDropdownRef.current.contains(event.target as Node)) {
+        setShowMainPurposeDropdown(false);
+      }
+    };
+
+    if (showMainPurposeDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showMainPurposeDropdown]);
+
+  // Close sub purpose dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (subPurposeDropdownRef.current && !subPurposeDropdownRef.current.contains(event.target as Node)) {
+        setShowSubPurposeDropdown(false);
+      }
+    };
+
+    if (showSubPurposeDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showSubPurposeDropdown]);
+
+  const handleMainPurposeSelect = (value: string) => {
+    handleMainPurposeChange(value);
+    setShowMainPurposeDropdown(false);
+  };
+
+  const handleSubPurposeSelect = (value: string) => {
+    setSubPurpose(value);
+    setShowSubPurposeDropdown(false);
+  };
+
   return (
     <div className="min-vh-100 pb-5">
       <div className="bg-primary text-white py-4 mb-4">
@@ -208,48 +256,194 @@ export function VisaApplication({ travelers, onUpdate, onNavigate, selectedCount
               {/* Main Purpose of Visiting */}
               <div className="mt-4 mb-4">
                 <Label className="mb-3 d-block">Main Purpose of Visiting</Label>
-                <select
-                  value={mainPurpose}
-                  onChange={(e) => handleMainPurposeChange(e.target.value)}
-                  className="form-select"
-                  style={{
-                    padding: '0.75rem',
-                    borderRadius: '6px',
-                    border: '1px solid #dee2e6',
-                    fontSize: '1rem',
-                  }}
-                >
-                  <option value="">Select Main Purpose</option>
-                  {mainPurposeOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                <div className="position-relative" ref={mainPurposeDropdownRef}>
+                  <button
+                    type="button"
+                    onClick={() => setShowMainPurposeDropdown(!showMainPurposeDropdown)}
+                    className="d-flex align-items-center gap-2 border rounded w-100"
+                    style={{
+                      borderColor: 'var(--border)',
+                      borderRadius: '6px',
+                      padding: '0.5rem 0.75rem',
+                      fontSize: '0.875rem',
+                      cursor: 'pointer',
+                      backgroundColor: '#fff',
+                      color: 'var(--foreground)',
+                      transition: 'all 0.2s ease',
+                      textAlign: 'left'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(13, 148, 136, 0.05)';
+                      e.currentTarget.style.borderColor = 'var(--primary-hover)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#fff';
+                      e.currentTarget.style.borderColor = 'var(--border)';
+                    }}
+                  >
+                    {mainPurpose ? (
+                      <span className="flex-grow-1 text-start">
+                        {mainPurposeOptions.find(opt => opt.value === mainPurpose)?.label}
+                      </span>
+                    ) : (
+                      <span className="flex-grow-1 text-start text-muted">Select Main Purpose</span>
+                    )}
+                    <ChevronDown 
+                      style={{ 
+                        width: '16px', 
+                        height: '16px',
+                        transform: showMainPurposeDropdown ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.2s ease',
+                        flexShrink: 0
+                      }} 
+                    />
+                  </button>
+                  
+                  {showMainPurposeDropdown && (
+                    <div
+                      className="position-absolute top-100 start-0 mt-1 bg-white border rounded shadow-lg"
+                      style={{
+                        minWidth: '100%',
+                        maxHeight: '300px',
+                        overflowY: 'auto',
+                        zIndex: 1000,
+                        borderColor: 'var(--border)',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                      }}
+                    >
+                      {mainPurposeOptions.map((option) => (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => handleMainPurposeSelect(option.value)}
+                          className="w-100 d-flex align-items-center gap-2 border-0 text-start p-2"
+                          style={{
+                            cursor: 'pointer',
+                            backgroundColor: option.value === mainPurpose ? 'var(--primary)' : 'transparent',
+                            color: option.value === mainPurpose ? 'white' : 'var(--foreground)',
+                            fontSize: '0.875rem',
+                            transition: 'all 0.2s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (option.value !== mainPurpose) {
+                              e.currentTarget.style.backgroundColor = 'rgba(13, 148, 136, 0.05)';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (option.value !== mainPurpose) {
+                              e.currentTarget.style.backgroundColor = 'transparent';
+                            } else {
+                              e.currentTarget.style.backgroundColor = 'var(--primary)';
+                            }
+                          }}
+                        >
+                          <span>{option.label}</span>
+                          {option.value === mainPurpose && (
+                            <span className="ms-auto" style={{ color: 'white' }}>✓</span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Sub Purpose of Visiting */}
               {mainPurpose && (
                 <div className="mb-4">
                   <Label className="mb-3 d-block">Sub Purpose of Visiting</Label>
-                  <select
-                    value={subPurpose}
-                    onChange={(e) => setSubPurpose(e.target.value)}
-                    className="form-select"
-                    style={{
-                      padding: '0.75rem',
-                      borderRadius: '6px',
-                      border: '1px solid #dee2e6',
-                      fontSize: '1rem',
-                    }}
-                  >
-                    <option value="">Select Sub Purpose</option>
-                    {subPurposeOptions[mainPurpose]?.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="position-relative" ref={subPurposeDropdownRef}>
+                    <button
+                      type="button"
+                      onClick={() => setShowSubPurposeDropdown(!showSubPurposeDropdown)}
+                      className="d-flex align-items-center gap-2 border rounded w-100"
+                      style={{
+                        borderColor: 'var(--border)',
+                        borderRadius: '6px',
+                        padding: '0.5rem 0.75rem',
+                        fontSize: '0.875rem',
+                        cursor: 'pointer',
+                        backgroundColor: '#fff',
+                        color: 'var(--foreground)',
+                        transition: 'all 0.2s ease',
+                        textAlign: 'left'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(13, 148, 136, 0.05)';
+                        e.currentTarget.style.borderColor = 'var(--primary-hover)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = '#fff';
+                        e.currentTarget.style.borderColor = 'var(--border)';
+                      }}
+                    >
+                      {subPurpose ? (
+                        <span className="flex-grow-1 text-start">
+                          {subPurposeOptions[mainPurpose]?.find(opt => opt.value === subPurpose)?.label}
+                        </span>
+                      ) : (
+                        <span className="flex-grow-1 text-start text-muted">Select Sub Purpose</span>
+                      )}
+                      <ChevronDown 
+                        style={{ 
+                          width: '16px', 
+                          height: '16px',
+                          transform: showSubPurposeDropdown ? 'rotate(180deg)' : 'rotate(0deg)',
+                          transition: 'transform 0.2s ease',
+                          flexShrink: 0
+                        }} 
+                      />
+                    </button>
+                    
+                    {showSubPurposeDropdown && (
+                      <div
+                        className="position-absolute top-100 start-0 mt-1 bg-white border rounded shadow-lg"
+                        style={{
+                          minWidth: '100%',
+                          maxHeight: '300px',
+                          overflowY: 'auto',
+                          zIndex: 1000,
+                          borderColor: 'var(--border)',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                        }}
+                      >
+                        {subPurposeOptions[mainPurpose]?.map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => handleSubPurposeSelect(option.value)}
+                            className="w-100 d-flex align-items-center gap-2 border-0 text-start p-2"
+                            style={{
+                              cursor: 'pointer',
+                              backgroundColor: option.value === subPurpose ? 'var(--primary)' : 'transparent',
+                              color: option.value === subPurpose ? 'white' : 'var(--foreground)',
+                              fontSize: '0.875rem',
+                              transition: 'all 0.2s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                              if (option.value !== subPurpose) {
+                                e.currentTarget.style.backgroundColor = 'rgba(13, 148, 136, 0.05)';
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (option.value !== subPurpose) {
+                                e.currentTarget.style.backgroundColor = 'transparent';
+                              } else {
+                                e.currentTarget.style.backgroundColor = 'var(--primary)';
+                              }
+                            }}
+                          >
+                            <span>{option.label}</span>
+                            {option.value === subPurpose && (
+                              <span className="ms-auto" style={{ color: 'white' }}>✓</span>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
 

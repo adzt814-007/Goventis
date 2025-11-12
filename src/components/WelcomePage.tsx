@@ -315,7 +315,7 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
               </ul>
             </Col>
             <Col md={6} className={isLoaded ? 'animate-slide-in-right animate-delay-2' : ''}>
-              <div className="position-relative  overflow-hidden shadow-lg" style={{ height: '400px', borderRadius: '25px' }}>
+              <div className="position-relative  overflow-hidden shadow-lg Img_Mobile" style={{ height: '400px', borderRadius: '25px' }}>
                 <ImageWithFallback
                   src={new URL('../Images/23368.jpg', import.meta.url).href}
                   alt="Tropical Beach, Bali"
@@ -369,7 +369,7 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
                       </div>
                     </div>
                   </div>
-                  <Card.Body className="p-4">
+                  <Card.Body className="p-4 Tax_content">
                     <div className="d-flex align-items-center justify-content-between mb-2">
                       <h3 className="h5 mb-0 fw-bold">{taxi.name}</h3>
                       <div className="d-flex align-items-center gap-1">
@@ -377,7 +377,7 @@ export function WelcomePage({ onNavigate, user, onLogout, currentPage, selectedC
                         <span className="small fw-semibold">{taxi.rating}</span>
                       </div>
                     </div>
-                    <p className="text-muted small mb-3" style={{ minHeight: '60px' }}>
+                    <p className="text-muted small mb-3 Tax_description" style={{ minHeight: '60px' }}>
                       {taxi.description}
                     </p>
                     <div className="d-flex align-items-center gap-2 mb-3">

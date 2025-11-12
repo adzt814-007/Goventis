@@ -4,7 +4,7 @@ import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
 import { NavBar } from './NavBar';
 import { Container, Row, Col } from 'react-bootstrap';
-import { ChevronLeft, ChevronRight, Download, Share2, Home, CheckCircle2, QrCode as QrCodeIcon } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Download, Share2, Home, CheckCircle2, QrCode as QrCodeIcon,ArrowLeft } from 'lucide-react';
 import type { Traveler } from '../App';
 import { getCountryFlagUrl } from '../App';
 
@@ -42,6 +42,15 @@ export function QRCode({ travelers, onNavigate, user, onLogout, currentPage, sel
       {/* Header */}
       <div className="bg-primary text-white py-4 mb-4" style={{ background: 'linear-gradient(to right, var(--primary), var(--ocean-blue))' }}>
         <Container>
+           <Button
+            variant="link"
+            onClick={() => onNavigate('dashboard')}
+            className="text-white mb-3 p-0"
+            style={{ textDecoration: 'none' }}
+          >
+            <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '8px' }} />
+            Back
+          </Button>
           <div className="d-flex align-items-center gap-2 mb-3">
             <CheckCircle2 style={{ width: '32px', height: '32px', color: 'white' }} />
             <div className='p-2 px-3 ' style={{border:"1px solid white",borderRadius:"16px"}}>All Complete</div>
@@ -284,18 +293,18 @@ export function QRCode({ travelers, onNavigate, user, onLogout, currentPage, sel
         </Card>
 
         {/* Action Buttons */}
-        <div className="d-flex flex-column flex-sm-row gap-3">
-          <Button
+        <div className="d-flex gap-3 justify-content-center">
+          {/* <Button
             onClick={() => onNavigate('dashboard')}
             variant="outline"
             className="flex-grow-1"
           >
             <Home style={{ width: '16px', height: '16px', marginRight: '8px' }} />
             Return to Dashboard
-          </Button>
+          </Button> */}
           <Button
             onClick={() => window.print()}
-            className="flex-grow-1"
+            className="px-5 print-certificates-btn"
             style={{ backgroundColor: 'var(--primary)', borderColor: 'var(--primary)' }}
           >
             <Download style={{ width: '16px', height: '16px', marginRight: '8px' }} />

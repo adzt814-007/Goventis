@@ -97,7 +97,7 @@ export function Dashboard({ user, travelers, onNavigate, onLogout, currentPage, 
                 />
                 Welcome back, {user?.name || 'Traveler'}! <img src={new URL('../Images/airplane.png', import.meta.url).href} alt="Airplane" style={{ objectFit: 'contain' }} />
               </h1>
-              <p className="text-white mb-0" style={{ fontSize: '1.1rem' }}>
+              <p className="text-white mb-0" style={{ fontSize: '1.3rem' }}>
                 {user?.email}
               </p>
             </div>
@@ -143,15 +143,15 @@ export function Dashboard({ user, travelers, onNavigate, onLogout, currentPage, 
               />
             </div>
           </div>
-          <CardContent className="p-4">
+          <CardContent className="p-3">
             <div className="d-flex align-items-center justify-content-between">
               <div className="d-flex align-items-center gap-3">
-                <div className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-primary" style={{ width: '48px', height: '48px' }}>
+                <div className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-primary Traveler_Icons" style={{ width: '48px', height: '48px' }}>
                   <UserIcon style={{ width: '24px', height: '24px', color: '#fff' }} />
                 </div>
                 <div>
                   <div className="fw-semibold">{travelers.length} {travelers.length === 1 ? 'Traveler' : 'Travelers'}</div>
-                  <div className="small text-muted">Added to your trip</div>
+                  <div className="small text-muted" style={{fontSize:"clamp(13px, 2vw, 1.15rem)"}}>Added to your trip</div>
                 </div>
               </div>
               {progress === 100 ? (
@@ -182,7 +182,7 @@ export function Dashboard({ user, travelers, onNavigate, onLogout, currentPage, 
                 </div>
                 <div className="flex-grow-1">
                   <h3 className="h4 mb-2 fw-bold">Ready to Start Your Journey?</h3>
-                  <p className="text-muted mb-4" style={{ fontSize: '1.05rem', lineHeight: '1.6' }}>
+                  <p className="text-muted mb-4" style={{ fontSize: 'clamp(15px, 2vw, 1.25rem)', lineHeight: '1.6' }}>
                     Begin by uploading your documents and completing the pre-arrival process. It takes only 10-15 minutes per traveler to get everything ready for your {selectedCountry} adventure.
                   </p>
                   <Button
@@ -213,14 +213,14 @@ export function Dashboard({ user, travelers, onNavigate, onLogout, currentPage, 
             <div className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-primary" style={{ width: '48px', height: '48px' }}>
               <FileCheck style={{ width: '24px', height: '24px', color: '#fff' }} />
             </div>
-            <h2 className="mb-0 fw-bold" style={{ fontSize: '1.75rem' }}>Complete These Steps</h2>
+            <h2 className="mb-0 fw-bold" style={{ fontSize: 'clamp(20px, 2vw, 1.45rem)' }}>Complete These Steps</h2>
           </div>
 
           {/* Step 1: Document Upload */}
           <Card className={`mb-3 border-0 shadow-sm ${hasCompletedDocuments ? 'border-success' : ''}`} style={{ borderRadius: '16px', borderWidth: hasCompletedDocuments ? '2px' : '0' }}>
-            <CardContent className="p-4">
-              <div className="d-flex align-items-start gap-4">
-                <div className={`rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 shadow-sm ${hasCompletedDocuments ? 'bg-success text-white' : 'bg-primary text-white'
+            <CardContent className="p-3">
+              <div className="d-flex align-items-start gap-3">
+                <div className={` Complete_Icon rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 shadow-sm ${hasCompletedDocuments ? 'bg-success text-white' : 'bg-primary text-white'
                   }`} style={{ width: '64px', height: '64px' }}>
                   {hasCompletedDocuments ? <CheckCircle2 style={{ width: '32px', height: '32px' }} /> : <FileCheck style={{ width: '32px', height: '32px' }} />}
                 </div>
@@ -234,13 +234,13 @@ export function Dashboard({ user, travelers, onNavigate, onLogout, currentPage, 
                       </Badge>
                     )}
                   </div>
-                  <p className="text-muted mb-4" style={{ fontSize: '1rem', lineHeight: '1.6' }}>
+                  <p className="text-muted mb-4" style={{ fontSize: 'clamp(15px, 2vw, 1.15rem)', lineHeight: '1.6' }}>
                     Upload passport, flight confirmation, and accommodation details for all travelers. This information will be used to auto-fill your entry requirements.
                   </p>
                   <Button
                     onClick={() => onNavigate(travelers.length === 0 ? 'pre-arrival-intro' : 'document-upload')}
                     variant={hasCompletedDocuments ? 'outline' : 'default'}
-                    className="px-4 py-2 fw-semibold"
+                    className="px-4 py-2 fw-semibold document-upload-btn"
                     style={{
                       borderRadius: '10px',
                       fontSize: '1rem',
@@ -264,9 +264,9 @@ export function Dashboard({ user, travelers, onNavigate, onLogout, currentPage, 
 
           {/* Step 2: Entry Requirements */}
           <Card className={`mb-3 border-0 shadow-sm ${hasCompletedEntryReqs ? 'border-success' : ''} ${travelers.length === 0 ? 'opacity-50' : ''}`} style={{ borderRadius: '16px', borderWidth: travelers.length > 0 && !hasCompletedEntryReqs ? '2px' : hasCompletedEntryReqs ? '2px' : '0' }}>
-            <CardContent className="p-4">
-              <div className="d-flex align-items-start gap-4">
-                <div className={`rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 shadow-sm ${hasCompletedEntryReqs ? 'bg-success text-white' : travelers.length > 0 ? 'bg-primary text-white' : 'bg-light text-muted'
+            <CardContent className="p-3">
+              <div className="d-flex align-items-start gap-3">
+                <div className={`Complete_Icon rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 shadow-sm ${hasCompletedEntryReqs ? 'bg-success text-white' : travelers.length > 0 ? 'bg-primary text-white' : 'bg-light text-muted'
                   }`} style={{ width: '64px', height: '64px' }}>
                   {hasCompletedEntryReqs ? <CheckCircle2 style={{ width: '32px', height: '32px' }} /> : <Shield style={{ width: '32px', height: '32px' }} />}
                 </div>
@@ -280,7 +280,7 @@ export function Dashboard({ user, travelers, onNavigate, onLogout, currentPage, 
                       </Badge>
                     )}
                   </div>
-                  <p className="text-muted mb-4" style={{ fontSize: '1rem', lineHeight: '1.6' }}>
+                  <p className="text-muted mb-4" style={{ fontSize: 'clamp(15px, 2vw, 1.15rem)', lineHeight: '1.6' }}>
                     Complete visa application, customs declaration, health pass, insurance, and arrival tax for all travelers
                   </p>
                   <div className="bg-light rounded p-3 mb-4" style={{ borderRadius: '12px' }}>
@@ -341,7 +341,7 @@ export function Dashboard({ user, travelers, onNavigate, onLogout, currentPage, 
                     onClick={() => onNavigate('visa-application')}
                     disabled={!hasCompletedDocuments}
                     variant={hasCompletedEntryReqs ? 'outline' : 'default'}
-                    className="px-4 py-2 fw-semibold"
+                    className="px-4 py-2 fw-semibold document-upload-btn"
                     style={{
                       borderRadius: '10px',
                       fontSize: '1rem',
@@ -365,9 +365,9 @@ export function Dashboard({ user, travelers, onNavigate, onLogout, currentPage, 
 
           {/* Step 3: QR Code & Entry Certificate */}
           <Card className={`mb-3 border-0 shadow-sm ${progress === 100 ? 'border-success' : 'opacity-50'}`} style={{ borderRadius: '16px', borderWidth: progress === 100 ? '2px' : '0' }}>
-            <CardContent className="p-4">
-              <div className="d-flex align-items-start gap-4">
-                <div className={`rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 shadow-sm ${progress === 100 ? 'bg-success text-white' : 'bg-light text-muted'
+            <CardContent className="p-3">
+              <div className="d-flex align-items-start gap-3">
+                <div className={` Complete_Icon rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 shadow-sm ${progress === 100 ? 'bg-success text-white' : 'bg-light text-muted'
                   }`} style={{ width: '64px', height: '64px' }}>
                   {progress === 100 ? <CheckCircle2 style={{ width: '32px', height: '32px' }} /> : <QrCode style={{ width: '32px', height: '32px' }} />}
                 </div>
@@ -381,7 +381,7 @@ export function Dashboard({ user, travelers, onNavigate, onLogout, currentPage, 
                       </Badge>
                     )}
                   </div>
-                  <p className="text-muted mb-4" style={{ fontSize: '1rem', lineHeight: '1.6' }}>
+                  <p className="text-muted mb-4" style={{ fontSize: 'clamp(15px, 2vw, 1.25rem)', lineHeight: '1.6' }}>
                     Get your entry certificate with QR code for quick processing at border control. Download and print before your departure.
                   </p>
                   <Button

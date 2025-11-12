@@ -345,7 +345,7 @@ export function LoginPage({ onNavigate, onLogin, selectedCountry = 'Bali' }: Log
                       e.currentTarget.style.display = 'none';
                     }}
                   />
-                  <h1 className="fw-bold m-0" style={{ fontSize: '24px', lineHeight: '1.3' }}>Create Account</h1>
+                  <h1 className="fw-bold m-0" style={{ fontSize: 'clamp(1.25rem, 3vw, 1.75rem)', lineHeight: '1.3' }}>Create Account</h1>
                 </div>
                 <div className="my-2 mb-3">
                   <a

@@ -3,33 +3,33 @@
   --font-size: 16px;
   --background: #ffffff;
   --foreground: #0f172a;
-  
+
   /* Primary - Tropical Teal (Ocean/Tropical Waters) */
   --primary: #0d9488;
   --primary-foreground: #ffffff;
   --primary-hover: #0f766e;
   --primary-light: #14b8a6;
-  
+
   /* Secondary - Warm Coral (Sunset/Tropical Warmth) */
   --secondary: #f3f3f5;
   --secondary-foreground: #0f172a;
   --accent: #f97316;
   --accent-foreground: #ffffff;
   --accent-hover: #ea580c;
-  
+
   /* Muted colors */
   --muted: #f1f5f9;
   --muted-foreground: #64748b;
-  
+
   /* Destructive */
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  
+
   /* Borders and inputs */
   --border: rgba(15, 23, 42, 0.1);
   --input: transparent;
   --input-background: #f8fafc;
-  
+
   /* Travel theme colors */
   --ocean-blue: #0891b2;
   --tropical-green: #10b981;
@@ -39,13 +39,13 @@
 
 html {
   font-size: var(--font-size);
-  }
+}
 
-  body {
-    background-color: var(--background);
-    color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -53,11 +53,13 @@ html {
 
 /* Login Page Sliding Panel Animation */
 @keyframes show {
-  0%, 49.99% {
+  0%,
+  49.99% {
     opacity: 0;
     z-index: 1;
   }
-  50%, 100% {
+  50%,
+  100% {
     opacity: 1;
     z-index: 5;
   }
@@ -80,31 +82,31 @@ html {
 /* Custom Bootstrap overrides - Travel Agency Theme */
 .btn-primary,
 .btn-primarys {
-    background-color: var(--primary);
+  background-color: var(--primary);
   border-color: var(--primary);
-    color: var(--primary-foreground);
-    font-size: 1rem;
-  }
+  color: var(--primary-foreground);
+  font-size: 1rem;
+}
 
 .btn-primary:hover,
 .btn-primarys:hover {
   background-color: var(--primary-hover);
   border-color: var(--primary-hover);
-    color: var(--primary-foreground);
-  }
+  color: var(--primary-foreground);
+}
 
 .btn-outline-primary,
 .btn-outline-primarys {
   color: var(--primary);
-    border-color: var(--primary);
-  }
+  border-color: var(--primary);
+}
 
 .btn-outline-primary:hover,
 .btn-outline-primarys:hover {
-    background-color: var(--primary);
+  background-color: var(--primary);
   border-color: var(--primary);
-    color: var(--primary-foreground);
-  }
+  color: var(--primary-foreground);
+}
 
 /* Disabled button styles */
 .btn:disabled,
@@ -494,12 +496,12 @@ select:focus option:hover,
 
 /* Checkbox styles - Green with white checkmark */
 .form-check-input:checked {
-  background-color: #0d9488  !important;
-  border-color: #0d9488  !important;
+  background-color: #0d9488 !important;
+  border-color: #0d9488 !important;
 }
 
 .form-check-input:focus {
-  border-color: #0d9488  !important;
+  border-color: #0d9488 !important;
   box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25) !important;
 }
 
@@ -545,7 +547,11 @@ select:focus option:hover,
 
 /* Travel theme gradient backgrounds */
 .bg-gradient-travel {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--ocean-blue) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary) 0%,
+    var(--ocean-blue) 100%
+  );
 }
 
 .bg-gradient-sunset {
@@ -553,7 +559,11 @@ select:focus option:hover,
 }
 
 .bg-gradient-tropical {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--tropical-green) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary) 0%,
+    var(--tropical-green) 100%
+  );
 }
 
 /* Final override - Remove ALL blue colors from select - Use #0d9488 */
@@ -625,4 +635,42 @@ select.theme-select,
   --bs-primary-rgb: 13, 148, 136 !important;
   --bs-border-color: var(--border) !important;
   --bs-focus-ring-color: rgba(13, 148, 136, 0.25) !important;
+}
+@media (max-width: 768px) {
+  .Complete_Icon {
+    width: 45px !important;
+    height: 45px !important;
+  }
+  .h5 {
+    font-size: 15px !important;
+  }
+  .Img_Mobile {
+    height: 250px !important;
+  }
+  .Traveler_Icons {
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+.Tax_content {
+  display: flex !important;
+  flex-direction: column !important;
+}
+.Tax_description {
+  flex: 1 !important;
+}
+.Shiled_Bg_Icon {
+  height: 46px !important;
+  width: 50px !important;
+}
+/* Ensure white text on hover for document upload button */
+.document-upload-btn:hover {
+  color: #ffffff !important;
+}
+.print-certificates-btn:hover {
+  background-color: var(--primary-hover) !important;
+  border-color: var(--primary-hover) !important;
+}
+.document-upload-btn:hover {
+  color: #ffffff !important;
 }
